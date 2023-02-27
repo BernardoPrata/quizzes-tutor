@@ -1,11 +1,14 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain;
-
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.Visitor;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.domain.Teacher;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.*;
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 
 
 @Entity
@@ -23,6 +26,10 @@ public class TeacherDashboard implements DomainEntity {
 
     public TeacherDashboard() {
     }
+
+    // baseed on knowledge from studentDashBoard
+    @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuizStats> quizStats = new ArrayList<>();
 
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
@@ -42,6 +49,7 @@ public class TeacherDashboard implements DomainEntity {
         return courseExecution;
     }
 
+
     public void setCourseExecution(CourseExecution courseExecution) {
         this.courseExecution = courseExecution;
     }
@@ -55,6 +63,18 @@ public class TeacherDashboard implements DomainEntity {
         this.teacher.addDashboard(this);
     }
 
+    public List<QuizStats> getQuizStats(){
+        return this.quizStats;
+    }
+
+    public void addQuizStats(QuizStats newQuizStats){
+        if (quizStats.stream()
+                .anyMatch(quizStat -> quizStat.getCourseExecution().getId()
+                        .equals(newQuizStats.getCourseExecution().getId()))) {
+            throw new TutorException(ErrorMessage.DUPLICATE_QUIZ_STATS);
+        }
+        quizStats.add(newQuizStats);
+    }
     public void accept(Visitor visitor) {
         // Only used for XML generation
     }
@@ -67,5 +87,6 @@ public class TeacherDashboard implements DomainEntity {
                 ", teacher=" + teacher +
                 '}';
     }
+
 
 }

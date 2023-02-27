@@ -74,6 +74,8 @@ public enum ErrorMessage {
     DUPLICATE_USER("Duplicate user: %s"),
     DUPLICATE_COURSE_EXECUTION("Duplicate course execution: %s"),
 
+    DUPLICATE_QUIZ_STATS("Duplicate quiz stats."),
+
     USERS_IMPORT_ERROR("Error importing users: %s"),
     QUESTIONS_IMPORT_ERROR("Error importing questions: %s"),
     TOPICS_IMPORT_ERROR("Error importing topics: %s"),
@@ -174,7 +176,8 @@ public enum ErrorMessage {
     FAILED_ANSWER_NOT_FOUND("Failed answer not found"),
     FAILED_ANSWER_ALREADY_CREATED("Failed answer already created"),
     CANNOT_CREATE_FAILED_ANSWER("Cannot create failed answer"),
-    CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer");
+    CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
+    INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes.");
 
     public final String label;
 
