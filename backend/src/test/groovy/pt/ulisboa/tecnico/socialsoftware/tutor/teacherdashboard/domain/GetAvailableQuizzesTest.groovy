@@ -1,17 +1,19 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.questionsubmission.service
+package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import pt.ulisboa.tecnico.socialsoftware.tutor.BeanConfiguration
 import pt.ulisboa.tecnico.socialsoftware.tutor.SpockTest
-import pt.ulisboa.tecnico.socialsoftware.tutor.auth.domain.AuthUser
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException
-import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question
-import pt.ulisboa.tecnico.socialsoftware.tutor.questionsubmission.domain.QuestionSubmission
-import pt.ulisboa.tecnico.socialsoftware.tutor.questionsubmission.domain.Review
-import pt.ulisboa.tecnico.socialsoftware.tutor.questionsubmission.dto.ReviewDto
-import pt.ulisboa.tecnico.socialsoftware.tutor.user.domain.Student
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.domain.Teacher
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.TeacherDashboard
+import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Course
+import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.QuizStats
+import pt.ulisboa.tecnico.socialsoftware.tutor.utils.DateHandler;
+
 import spock.lang.Unroll
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
@@ -19,47 +21,144 @@ import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*
 @DataJpaTest
 class GetAvailableQuizzesTest extends SpockTest {
 
+    def teacher
+    def dashboard
+    def course
+    def courseExecution
+
+    def quiz1
+    def quiz2
+    def quiz3
+    def quizStats
+
     def setup() {
+
+        teacher = new Teacher(USER_1_NAME, false)
+        userRepository.save(teacher)
+
+        course = new Course(COURSE_1_NAME, Course.Type.EXTERNAL)
+        courseRepository.save(course)
+
+        courseExecution = new CourseExecution(course, COURSE_1_ACRONYM, COURSE_1_ACADEMIC_TERM, Course.Type.EXTERNAL, LOCAL_DATE_TOMORROW)
+        courseExecutionRepository.save(courseExecution)
+
+        dashboard = new TeacherDashboard(courseExecution, teacher)
+        teacherDashboardRepository.save(dashboard)
+
+        quizStats = new QuizStats(dashboard, courseExecution)
+        quizStatsRepository.save(quizStats)
     }
+
 
     def "get number of quizzes associated with a course Execution with 0 quizzes" () {
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 0
+
+        when:
+        quizStats.update()
+        def result = quizStats.getNumQuizzes()
+
+        then: "the returned number of quizzes is correct"
+        result == 0
+        result == dashboard.getQuizStats().get(0).getNumQuizzes()
     }
+
 
     def "get number of quizzes associated with a course Execution with 1 quizz" () {
-        // The course execution starts without quizzes
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 0
-        // adds a Quizz
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 1
+
+        given: "a new quiz submission"
+        quiz1 = new Quiz()
+        quiz1.setKey(1)
+        quiz1.setTitle("Quiz 1")
+        quiz1.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz1.setCourseExecution(courseExecution)
+        quiz1.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz1)
+
+        when: "the statistics are updated"
+        quizStats.update()
+        def result = quizStats.getNumQuizzes()
+
+        then: "the returned number of quizzes is correct"
+        result == 1
+        result == dashboard.getQuizStats().get(0).getNumQuizzes()
     }
+
 
     def "get number of quizzes associated with a course Execution with 3 quizzes" () {
-        // The course execution starts without quizzes
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 0
-        // adds a Quizz
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 1
-        // adds a Quizz
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 2
-        // adds a Quizz
-        // courseExecution.getQuizzes().count() == QuizStats.getAvailableQuizzes() == 3
+
+        given: "a new quiz submission"
+        quiz1 = new Quiz()
+        quiz1.setKey(1)
+        quiz1.setTitle("Quiz 1")
+        quiz1.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz1.setCourseExecution(courseExecution)
+        quiz1.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz1)
+
+        and: "another quiz submission"
+        quiz2 = new Quiz()
+        quiz2.setKey(2)
+        quiz2.setTitle("Quiz 2")
+        quiz2.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz2.setCourseExecution(courseExecution)
+        quiz2.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz2)
+
+        and: "another quiz submission"
+        quiz3 = new Quiz()
+        quiz3.setKey(3)
+        quiz3.setTitle("Quiz 3")
+        quiz3.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz3.setCourseExecution(courseExecution)
+        quiz3.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz3)
+
+        when: "the statistics are updated"
+        quizStats.update()
+        def result = quizStats.getNumQuizzes()
+
+        then: "the returned number of quizzes is correct"
+        result == 3
+        result == dashboard.getQuizStats().get(0).getNumQuizzes()
     }
 
-    def "create two statistics for the same execution"(){
-        // throw(TutorException)
+
+    def "add the same statistics twice"(){
+
+        when: "the same statistics are added for the dashboard twice"
+        dashboard.addQuizStats(quizStats)
+
+        then: "exception is thrown"
+        def exception = thrown(TutorException)
+        exception.getErrorMessage() == ErrorMessage.DUPLICATE_QUIZ_STATS
     }
+
 
     def "update the statistics of a dashboard"(){
-        // dashboard = new ...
-        // courseExecution = new ...
-        // getQuizStats(dashboard, courseExecution)
-        // dashboard.addDashbord(dashboard)
-        // dashboard.addCourseExecution(courseExecution)
-        // courseExecution.addQuiz() // n vezes
-        // dashboard.getQuizStat().getNumQuizzes()
+
+        given: "a new quiz submission"
+        quiz1 = new Quiz()
+        quiz1.setKey(1)
+        quiz1.setTitle("Quiz 1")
+        quiz1.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz1.setCourseExecution(courseExecution)
+        quiz1.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz1)
+
+        when: "the dashboard isn't updated"
+        def result = dashboard.getQuizStats().get(0).getNumQuizzes()
+
+        then: "the returned number of quizzes isn't updated"
+        result == 0
+
+        when: "the dashboard is updated"
+        dashboard.update()
+        result = dashboard.getQuizStats().get(0).getNumQuizzes()
+
+        then: "the returned number of quizzes is now updated"
+        result == 1
     }
 
+
+    @TestConfiguration
+    static class LocalBeanConfiguration extends BeanConfiguration {}
 }
-
-
-
-

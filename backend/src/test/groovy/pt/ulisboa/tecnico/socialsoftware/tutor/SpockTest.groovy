@@ -49,6 +49,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.tournament.repository.TournamentR
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserApplicationalService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.repository.UserRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.QuizStatsRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.Mailer
 import spock.lang.Shared
@@ -239,6 +240,9 @@ class SpockTest extends Specification {
 
     @Autowired
     QuizService quizService
+
+    @Autowired
+    QuizStatsRepository quizStatsRepository
 
     @Autowired
     TopicConjunctionRepository topicConjunctionRepository
