@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.tutor.studentdashboard.repository;
+package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

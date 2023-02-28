@@ -16,6 +16,8 @@ public class QuizStats implements DomainEntity{
 
     private int numQuizzes;
     @OneToOne
+    @JoinColumn(name = "course_execution_id", unique = true)
+    // we will get a database error due to the unique constraint violation.
     private CourseExecution courseExecution;
 
     @ManyToOne
@@ -62,6 +64,7 @@ public class QuizStats implements DomainEntity{
 
     public void setTeacherDashboard(TeacherDashboard teacherDashboard){
         this.teacherDashboard=teacherDashboard;
+        this.teacherDashboard.addQuizStats(this);
     }
 
     public CourseExecution getCourseExecution() {
