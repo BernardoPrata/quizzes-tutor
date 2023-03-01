@@ -31,14 +31,14 @@ class GetNumberOfStudentsTest extends SpockTest {
         // dashboard = new TeacherDashboard(courseExecution, teacher)
         // teacherDashboardRepository.save(dashboard)
 
-        //studentsStats = new StudentsStats(dashboard, courseExecution)
-        //studentsStatsRepository.save(studentsStats)
+        //studentStats = new studentStats(dashboard, courseExecution)
+        //studentStatsRepository.save(studentStats)
     }
 
     def "get total number of students when there is no students in the current course Execution"() {
         // when: 
-        // studentsStats.update()
-        // def result = studentsStats.GetNumStudents()
+        // studentStats.update()
+        // def result = studentStats.GetNumStudents()
 
         // then: "the returned number of students is correct"
         // result == 0    
@@ -51,8 +51,8 @@ class GetNumberOfStudentsTest extends SpockTest {
         // given: "a new student"
 
         // when:
-        // studentsStats.update()
-        // def result = studentsStats.GetNumStudents()
+        // studentStats.update()
+        // def result = studentStats.GetNumStudents()
 
         // then: "the returned number of students is correct"
         // result == 1
@@ -76,8 +76,8 @@ class GetNumberOfStudentsTest extends SpockTest {
         //    student3.setID()
 
         //    when:
-        //    studentsStats.update()
-        //    def result = studentsStats.GetNumStudents()
+        //    studentStats.update()
+        //    def result = studentStats.GetNumStudents()
 
         //    then: "the returned number of students is correct"
         //    result == 3
