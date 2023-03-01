@@ -1,4 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain;
+
+import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
@@ -8,7 +10,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.persistence.*;
-import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 
 
 @Entity
@@ -24,12 +25,14 @@ public class TeacherDashboard implements DomainEntity {
     @ManyToOne
     private Teacher teacher;
 
-    public TeacherDashboard() {
-    }
+    @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StudentStats> studentsStats = new ArrayList<>();
 
-    // baseed on knowledge from studentDashBoard
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizStats> quizStats = new ArrayList<>();
+
+    public TeacherDashboard() {
+    }
 
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
@@ -41,6 +44,12 @@ public class TeacherDashboard implements DomainEntity {
         teacher = null;
     }
 
+    public void update(){
+        for (QuizStats quizStat : quizStats) {
+            quizStat.update();
+        }
+    }
+
     public Integer getId() {
         return id;
     }
@@ -48,7 +57,6 @@ public class TeacherDashboard implements DomainEntity {
     public CourseExecution getCourseExecution() {
         return courseExecution;
     }
-
 
     public void setCourseExecution(CourseExecution courseExecution) {
         this.courseExecution = courseExecution;
@@ -76,11 +84,19 @@ public class TeacherDashboard implements DomainEntity {
         quizStats.add(newQuizStats);
     }
 
-    public void update(){
-        for (QuizStats quizStat : quizStats) {
-            quizStat.update();
-        }
+    public List<StudentStats> getStudentsStats() {
+        return this.studentsStats;
     }
+
+    public void addStudentStats(StudentStats newStudentStats){
+        if (studentsStats.stream()
+                .anyMatch(StudentStats -> StudentStats.getCourseExecution().getId()
+                        .equals(newStudentStats.getCourseExecution().getId()))) {
+            throw new TutorException(ErrorMessage.DUPLICATE_STUDENT_STATS);
+        }
+        studentsStats.add(newStudentStats);
+    }
+
     public void accept(Visitor visitor) {
         // Only used for XML generation
     }

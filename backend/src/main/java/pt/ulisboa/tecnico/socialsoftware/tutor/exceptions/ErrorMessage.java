@@ -177,7 +177,10 @@ public enum ErrorMessage {
     FAILED_ANSWER_ALREADY_CREATED("Failed answer already created"),
     CANNOT_CREATE_FAILED_ANSWER("Cannot create failed answer"),
     CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
-    INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes.");
+    INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes."),
+
+    DUPLICATE_STUDENT_STATS("Duplicate student stats"),
+    INVALID_STUDENT_STATS("Invalid student stats");
 
     public final String label;
 
