@@ -180,8 +180,10 @@ public enum ErrorMessage {
     CANNOT_CREATE_FAILED_ANSWER("Cannot create failed answer"),
     CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
     INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes."),
-    INVALID_QUESTIONS_NUMBER("Invalid Number of Questions");
+    INVALID_QUESTIONS_NUMBER("Invalid Number of Questions"),
 
+    DUPLICATE_STUDENT_STATS("Duplicate student stats"),
+    INVALID_STUDENT_STATS("Invalid student stats");
 
     public final String label;
 
