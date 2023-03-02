@@ -18,7 +18,7 @@ public class QuizStats implements DomainEntity{
 
     private int totalSolvedNumQuizzes;
 
-
+    private float averageSolvedNumQuizzes;
 
     @OneToOne
     @JoinColumn(name = "course_execution_id", unique = true)
@@ -56,6 +56,18 @@ public class QuizStats implements DomainEntity{
         if (totalUniqueQuizzes > 0)
             setTotalSolvedNumQuizzes(totalUniqueQuizzes);
         else setTotalSolvedNumQuizzes(0);
+
+        int totalSolvedQuizzes = courseExecution.getStudents()
+                .stream()
+                .mapToInt(student -> student.getQuizAnswers().size())
+                .sum();
+        if (totalSolvedQuizzes == 0){
+            setAverageSolvedNumQuizzes(0);
+        }
+        else{
+            float averageSolvedNumQuizzes = (float) totalSolvedQuizzes / courseExecution.getStudents().size();
+            setAverageSolvedNumQuizzes(averageSolvedNumQuizzes);
+        }
     }
 
     public Integer getId() {
@@ -73,8 +85,17 @@ public class QuizStats implements DomainEntity{
     public int getTotalSolvedNumQuizzes(){
         return totalSolvedNumQuizzes;
     }
+
+    public float getAverageSolvedNumQuizzes() {
+        return averageSolvedNumQuizzes;
+    }
+
     public void setTotalSolvedNumQuizzes(int totalSolvedNumQuizzes ){
             this.totalSolvedNumQuizzes = totalSolvedNumQuizzes;
+    }
+
+    public void setAverageSolvedNumQuizzes(float averageSolvedNumQuizzes) {
+        this.averageSolvedNumQuizzes = averageSolvedNumQuizzes;
     }
 
     public TeacherDashboard getTeacherDashboard() {
@@ -105,6 +126,7 @@ public class QuizStats implements DomainEntity{
                 ", teacherDashboard=" + teacherDashboard +
                 ", numQuizzes=" + numQuizzes +
                 ", totalSolvedNumQuizzes" + totalSolvedNumQuizzes +
+                ", averageSolvedNumQuizzes" + averageSolvedNumQuizzes +
                 '}';
     }
 }
