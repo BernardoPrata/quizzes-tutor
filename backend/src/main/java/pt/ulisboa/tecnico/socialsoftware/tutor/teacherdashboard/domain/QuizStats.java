@@ -15,9 +15,13 @@ public class QuizStats implements DomainEntity{
     private Integer id;
 
     private int numQuizzes;
+
+    private int totalSolvedNumQuizzes;
+
+
+
     @OneToOne
     @JoinColumn(name = "course_execution_id", unique = true)
-    // we will get a database error due to the unique constraint violation.
     private CourseExecution courseExecution;
 
     @ManyToOne
@@ -25,12 +29,9 @@ public class QuizStats implements DomainEntity{
 
     public QuizStats(TeacherDashboard teacherDashboard, CourseExecution courseExecution)
     {
-        // ToDo: check if I really need to do this on creation,or only after first update
-        // int numQuizzes = courseExecution.getQuizzes().size();
-        //if (numQuizzes < 0)throw new TutorException(ErrorMessage.INVALID_QUIZZES_NUMBER);
-        // else setNumQuizzes(numQuizzes);
+        setCourseExecution(courseExecution);        
         setTeacherDashboard(teacherDashboard);
-        setCourseExecution(courseExecution);
+
     }
 
     public void remove(){
@@ -39,11 +40,22 @@ public class QuizStats implements DomainEntity{
         // Note: No need to remove from courseExecution given that it is a unidirectional association
     }
 
-    public void update(){
+    public void update() {
         int calculation = courseExecution.getQuizzes().size();
-        if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_QUIZZES_NUMBER);
-        else setNumQuizzes(calculation);
+        if (calculation < 0) {
+            throw new TutorException(ErrorMessage.INVALID_QUIZZES_NUMBER);
+        } else {
+            setNumQuizzes(calculation);
+        }
 
+
+        int totalUniqueQuizzes = (int) courseExecution.getQuizzes().stream()
+                .filter(quiz -> !quiz.getQuizAnswers().isEmpty())
+                .count();
+
+        if (totalUniqueQuizzes > 0)
+            setTotalSolvedNumQuizzes(totalUniqueQuizzes);
+        else setTotalSolvedNumQuizzes(0);
     }
 
     public Integer getId() {
@@ -56,6 +68,13 @@ public class QuizStats implements DomainEntity{
 
     public void setNumQuizzes(int numQuizzes) {
         this.numQuizzes = numQuizzes;
+    }
+
+    public int getTotalSolvedNumQuizzes(){
+        return totalSolvedNumQuizzes;
+    }
+    public void setTotalSolvedNumQuizzes(int totalSolvedNumQuizzes ){
+            this.totalSolvedNumQuizzes = totalSolvedNumQuizzes;
     }
 
     public TeacherDashboard getTeacherDashboard() {
@@ -85,6 +104,7 @@ public class QuizStats implements DomainEntity{
                 ", courseExecution=" + courseExecution +
                 ", teacherDashboard=" + teacherDashboard +
                 ", numQuizzes=" + numQuizzes +
+                ", totalSolvedNumQuizzes" + totalSolvedNumQuizzes +
                 '}';
     }
 }
