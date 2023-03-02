@@ -115,14 +115,17 @@ class GetAvailableQuizzesTest extends SpockTest {
         when: "the statistics are updated"
         quizStats.update()
         def result = quizStats.getNumQuizzes()
+        def resultQuizStats = dashboard.getQuizStats()
 
         then: "the returned number of quizzes is correct"
+        resultQuizStats.size()==1
         result == 3
+        // following line is to verify instance is same as quizStats directly mentioned
         result == dashboard.getQuizStats().get(0).getNumQuizzes()
     }
 
 
-    def "add the same statistics twice"(){
+    def "cannot add the same statistics twice"(){
 
         when: "the same statistics are added for the dashboard twice"
         dashboard.addQuizStats(quizStats)
@@ -159,6 +162,67 @@ class GetAvailableQuizzesTest extends SpockTest {
     }
 
 
+
+    def "create a QuizStats "(){
+
+        given: "a new created quiz"
+        quiz2 = new Quiz()
+        quiz2.setKey(2)
+        quiz2.setTitle("Quiz 2")
+        quiz2.setType(Quiz.QuizType.PROPOSED.toString())
+        quiz2.setCourseExecution(courseExecution)
+        quiz2.setAvailableDate(DateHandler.now())
+        quizRepository.save(quiz2)
+
+        when: "the teacherDashboard is updated"
+        dashboard.update()
+        def result = dashboard.getQuizStats()
+
+        then: "the list quizStats contains only one element"
+        // contains one element not because of quizAddition, but because of courseExecution in setup
+        result.size()==1
+
+        when: ""
+        def resultQuizStats = result.get(0)
+
+        then: "the new QuizStat is correctly persisted"
+        quizStatsRepository.count() == 1L
+
+        def quizStats = quizStatsRepository.findAll().get(0)
+        quizStats.getId() != null
+        quizStats.getTeacherDashboard().getId() == dashboard.getId()
+        quizStats.getCourseExecution().getId() == courseExecution.getId()
+
+        and: " and number of quizzes is correct both in DB and in instance"
+        resultQuizStats.getNumQuizzes()== 1
+        quizStats.getNumQuizzes() == 1
+
+
+    }
+
+    def "get quizStats from two course Executions for same dashboard"(){
+        given:
+        def courseExecution2 = new CourseExecution(course, COURSE_2_ACRONYM, COURSE_2_ACADEMIC_TERM, Course.Type.EXTERNAL, LOCAL_DATE_TOMORROW)
+        assert courseExecution2 != null : "courseExecution2 is null"
+        courseExecutionRepository.save(courseExecution2)
+
+        dashboard.setCourseExecution(courseExecution2)
+        def quizStats2 = new QuizStats(dashboard,courseExecution2)
+        quizStatsRepository.save(quizStats2)
+
+        when:
+        dashboard.update()
+        def result = dashboard.getQuizStats()
+
+        then:
+        result.size() == 2
+        quizStatsRepository.count() == 2L
+        def quizStats = quizStatsRepository.findAll().get(1)
+        quizStats.getId() != null
+        quizStats.getTeacherDashboard().getId() == dashboard.getId()
+        quizStats.getCourseExecution().getId() == courseExecution2.getId()
+        quizStats.getNumQuizzes() == 0
+    }
     @TestConfiguration
     static class LocalBeanConfiguration extends BeanConfiguration {}
 }
