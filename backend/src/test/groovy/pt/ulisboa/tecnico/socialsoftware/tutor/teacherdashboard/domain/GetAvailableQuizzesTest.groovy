@@ -120,7 +120,6 @@ class GetAvailableQuizzesTest extends SpockTest {
         then: "the returned number of quizzes is correct"
         resultQuizStats.size()==1
         result == 3
-        // following line is to verify instance is same as quizStats directly mentioned
         result == dashboard.getQuizStats().get(0).getNumQuizzes()
     }
 
@@ -179,7 +178,6 @@ class GetAvailableQuizzesTest extends SpockTest {
         def result = dashboard.getQuizStats()
 
         then: "the list quizStats contains only one element"
-        // contains one element not because of quizAddition, but because of courseExecution in setup
         result.size()==1
 
         when: ""
