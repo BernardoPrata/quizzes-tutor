@@ -48,16 +48,14 @@ public class TeacherDashboard implements DomainEntity {
         for (QuizStats quizStat : quizStats) {
             quizStat.update();
         }
+
+        studentsStats.forEach(StudentStats::update);
     }
 
     public Integer getId() {
         return id;
     }
     
-    public void update(){
-        studentsStats.forEach(StudentStats::update);
-    }
-
     public CourseExecution getCourseExecution() {
         return courseExecution;
     }
@@ -111,6 +109,8 @@ public class TeacherDashboard implements DomainEntity {
                 "id=" + id +
                 ", courseExecution=" + courseExecution +
                 ", teacher=" + teacher +
+                ", quizStats=" + quizStats +
+                ", + studentsStats=" + studentsStats +
                 '}';
     }
 
