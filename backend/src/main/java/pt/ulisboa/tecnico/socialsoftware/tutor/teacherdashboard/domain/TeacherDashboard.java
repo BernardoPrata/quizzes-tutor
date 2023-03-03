@@ -50,6 +50,10 @@ public class TeacherDashboard implements DomainEntity {
     public Integer getId() {
         return id;
     }
+    
+    public void update(){
+        studentsStats.forEach(StudentStats::update);
+    }
 
     public CourseExecution getCourseExecution() {
         return courseExecution;
