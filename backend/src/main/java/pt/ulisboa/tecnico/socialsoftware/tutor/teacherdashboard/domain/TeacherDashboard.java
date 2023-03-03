@@ -27,9 +27,11 @@ public class TeacherDashboard implements DomainEntity {
     public TeacherDashboard() {
     }
 
-    // baseed on knowledge from studentDashBoard
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuizStats> quizStats = new ArrayList<>();
+
+    @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<QuestionStats> questionStats = new ArrayList<>();
 
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
@@ -76,9 +78,23 @@ public class TeacherDashboard implements DomainEntity {
         quizStats.add(newQuizStats);
     }
 
+    public List<QuestionStats> getQuestionStats() { return this.questionStats; }
+
+    public void addQuestionStats(QuestionStats newQuestionStats) {
+        if (questionStats.stream()
+                .anyMatch(questionStat -> questionStat.getCourseExecution().getId()
+                        .equals(newQuestionStats.getCourseExecution().getId()))) {
+            throw new TutorException(ErrorMessage.DUPLICATE_QUESTION_STATS);
+        }
+        questionStats.add(newQuestionStats);
+    }
+
     public void update(){
         for (QuizStats quizStat : quizStats) {
             quizStat.update();
+        }
+        for (QuestionStats questionStat : questionStats) {
+            questionStat.update();
         }
     }
     public void accept(Visitor visitor) {
@@ -91,6 +107,8 @@ public class TeacherDashboard implements DomainEntity {
                 "id=" + id +
                 ", courseExecution=" + courseExecution +
                 ", teacher=" + teacher +
+                ", quizStats=" + quizStats +
+                ", questionStats=" + questionStats +
                 '}';
     }
 

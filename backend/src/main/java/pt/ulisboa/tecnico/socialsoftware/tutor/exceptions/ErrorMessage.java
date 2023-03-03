@@ -76,6 +76,8 @@ public enum ErrorMessage {
 
     DUPLICATE_QUIZ_STATS("Duplicate quiz stats."),
 
+    DUPLICATE_QUESTION_STATS("Duplicate question stats."),
+
     USERS_IMPORT_ERROR("Error importing users: %s"),
     QUESTIONS_IMPORT_ERROR("Error importing questions: %s"),
     TOPICS_IMPORT_ERROR("Error importing topics: %s"),
@@ -177,7 +179,9 @@ public enum ErrorMessage {
     FAILED_ANSWER_ALREADY_CREATED("Failed answer already created"),
     CANNOT_CREATE_FAILED_ANSWER("Cannot create failed answer"),
     CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
-    INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes.");
+    INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes."),
+    INVALID_QUESTIONS_NUMBER("Invalid Number of Questions");
+
 
     public final String label;
 
