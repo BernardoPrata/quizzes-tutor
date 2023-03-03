@@ -51,11 +51,11 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserApplicationalService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.UserService
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.repository.UserRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.QuizStatsRepository
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.StudentStatsRepository
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.Mailer
 import spock.lang.Shared
 import spock.lang.Specification
-import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.StudentStatsRepository
 
 import java.time.LocalDateTime
 
@@ -303,7 +303,10 @@ class SpockTest extends Specification {
     @Autowired
     StudentStatsRepository studentStatsRepository
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> feat(ESA_1.2): Implement tests
     @Autowired
     DemoUtils demoUtils
 
