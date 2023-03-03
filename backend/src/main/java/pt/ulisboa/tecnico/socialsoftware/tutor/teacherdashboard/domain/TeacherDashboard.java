@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -86,10 +88,6 @@ public class TeacherDashboard implements DomainEntity {
         quizStats.add(newQuizStats);
     }
 
-    public List<StudentStats> getStudentsStats() {
-        return this.studentsStats;
-    }
-
     public void addStudentStats(StudentStats newStudentStats){
         if (studentsStats.stream()
                 .anyMatch(StudentStats -> StudentStats.getCourseExecution().getId()
@@ -97,6 +95,10 @@ public class TeacherDashboard implements DomainEntity {
             throw new TutorException(ErrorMessage.DUPLICATE_STUDENT_STATS);
         }
         studentsStats.add(newStudentStats);
+    }
+
+    public List<StudentStats> getStudentsStats() {
+        return this.studentsStats;
     }
 
     public void accept(Visitor visitor) {
