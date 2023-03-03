@@ -73,10 +73,8 @@ public enum ErrorMessage {
     DUPLICATE_TOPIC("Duplicate topic: %s"),
     DUPLICATE_USER("Duplicate user: %s"),
     DUPLICATE_COURSE_EXECUTION("Duplicate course execution: %s"),
-
+    DUPLICATE_QUESTION_STATS("Duplicate question stats"),
     DUPLICATE_QUIZ_STATS("Duplicate quiz stats."),
-
-    DUPLICATE_QUESTION_STATS("Duplicate question stats."),
 
     USERS_IMPORT_ERROR("Error importing users: %s"),
     QUESTIONS_IMPORT_ERROR("Error importing questions: %s"),
@@ -176,11 +174,13 @@ public enum ErrorMessage {
     CANNOT_REMOVE_DIFFICULT_QUESTION("Cannot remove difficult question"),
 
     FAILED_ANSWER_NOT_FOUND("Failed answer not found"),
+    INVALID_QUESTIONS_NUMBER("Invalid number of available questions"),
+    INVALID_AVERAGE_UNIQUE_QUESTIONS_ANSWERED("Invalid average number of unique questions answered by students"),
     FAILED_ANSWER_ALREADY_CREATED("Failed answer already created"),
     CANNOT_CREATE_FAILED_ANSWER("Cannot create failed answer"),
     CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
     INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes."),
-    INVALID_QUESTIONS_NUMBER("Invalid Number of Questions"),
+    NO_STUDENTS_IN_CURRENT_COURSE_EXECUTION("No students enrolled in current course execution"),
     INVALID_NUMBER_OF_UNIQUE_ANSWERED_QUESTIONS("Invalid number of unique answered questions"),
 
     DUPLICATE_STUDENT_STATS("Duplicate student stats"),

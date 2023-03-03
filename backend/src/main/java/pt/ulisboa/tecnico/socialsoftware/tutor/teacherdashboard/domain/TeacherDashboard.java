@@ -39,6 +39,7 @@ public class TeacherDashboard implements DomainEntity {
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<QuestionStats> questionStats = new ArrayList<>();
 
+
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
         setTeacher(teacher);
@@ -93,6 +94,7 @@ public class TeacherDashboard implements DomainEntity {
         }
         questionStats.add(newQuestionStats);
     }
+
 
     public void addStudentStats(StudentStats newStudentStats){
         if (studentsStats.stream()

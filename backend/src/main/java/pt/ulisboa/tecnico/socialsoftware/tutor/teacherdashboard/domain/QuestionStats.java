@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.QuizQuestion;
+import pt.ulisboa.tecnico.socialsoftware.tutor.quiz.domain.Quiz;
 import pt.ulisboa.tecnico.socialsoftware.tutor.question.domain.Question;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.Visitor;
@@ -24,6 +25,8 @@ public class QuestionStats implements DomainEntity {
 
     private int numAvailable;
 
+    private float averageQuestionsAnswered;
+
     private int answeredQuestionUnique;
 
     @OneToOne
@@ -39,7 +42,6 @@ public class QuestionStats implements DomainEntity {
     public QuestionStats(CourseExecution courseExecution, TeacherDashboard teacherDashboard) {
         setCourseExecution(courseExecution);
         setTeacherDashboard(teacherDashboard);
-        // setNumAvailable(courseExecution);
     }
 
     public void remove() {
@@ -54,8 +56,6 @@ public class QuestionStats implements DomainEntity {
                 calculation += 1;
             }
         }
-        //int calculation = courseExecution.getNumberOfQuestions();
-        // int calculation = courseExecution.getQuestionSubmissions().size();
         if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_QUESTIONS_NUMBER);
         else setNumAvailable(calculation);
 
@@ -72,6 +72,17 @@ public class QuestionStats implements DomainEntity {
                 unique_questions += 1;
             }
         }
+
+        int numStudents = courseExecution.getStudents().size();
+        float average = (numStudents > 0 && unique_questions > 0) ? (float)unique_questions / numStudents : 0;
+
+
+        if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_QUESTIONS_NUMBER);
+        else setNumAvailable(calculation);
+
+        if (average < 0) throw new TutorException(ErrorMessage.INVALID_AVERAGE_UNIQUE_QUESTIONS_ANSWERED);
+        else setAverageQuestionsAnswered(average);
+
         if (unique_questions < 0) throw new TutorException(ErrorMessage.INVALID_NUMBER_OF_UNIQUE_ANSWERED_QUESTIONS);
         setAnsweredQuestionUnique(unique_questions);
     }
@@ -85,6 +96,12 @@ public class QuestionStats implements DomainEntity {
     }
 
     public int getAnsweredQuestionUnique(){ return this.answeredQuestionUnique; }
+
+    public float getAverageQuestionsAnswered() { return this.averageQuestionsAnswered; }
+
+    public void setAverageQuestionsAnswered(float averageQuestionsAnswered) {
+        this.averageQuestionsAnswered = averageQuestionsAnswered;
+    }
 
     public void setAnsweredQuestionUnique(int answeredQuestionUnique) {
         this.answeredQuestionUnique = answeredQuestionUnique;
@@ -113,6 +130,7 @@ public class QuestionStats implements DomainEntity {
                 "id=" + id +
                 ", answeredQuestionUnique=" + answeredQuestionUnique +
                 ", numAvailable=" + numAvailable +
+                ", averageQuestionsAnswered=" + averageQuestionsAnswered +
                 ", courseExecution=" + courseExecution +
                 ", teacherDashboard=" + teacherDashboard +
                 '}';
