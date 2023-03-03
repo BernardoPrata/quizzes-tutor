@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
@@ -52,7 +50,7 @@ public class TeacherDashboard implements DomainEntity {
     public Integer getId() {
         return id;
     }
-    
+
     public CourseExecution getCourseExecution() {
         return courseExecution;
     }
