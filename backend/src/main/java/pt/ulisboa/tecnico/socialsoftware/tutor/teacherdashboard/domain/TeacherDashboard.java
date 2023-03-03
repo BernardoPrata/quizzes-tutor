@@ -26,7 +26,7 @@ public class TeacherDashboard implements DomainEntity {
     private Teacher teacher;
 
     // baseed on knowledge from studentDashBoard
-    @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacherDashboard", orphanRemoval = true)
     private List<StudentStats> studentsStats = new ArrayList<>();
 
     public TeacherDashboard() {
@@ -44,6 +44,10 @@ public class TeacherDashboard implements DomainEntity {
 
     public Integer getId() {
         return id;
+    }
+
+    public void update(){
+        studentsStats.forEach(StudentStats::update);
     }
 
     public CourseExecution getCourseExecution() {
@@ -86,6 +90,7 @@ public class TeacherDashboard implements DomainEntity {
                 "id=" + id +
                 ", courseExecution=" + courseExecution +
                 ", teacher=" + teacher +
+                ", studentsStats=" + studentsStats +
                 '}';
     }
 
