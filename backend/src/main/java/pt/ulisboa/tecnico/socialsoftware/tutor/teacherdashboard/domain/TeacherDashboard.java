@@ -126,6 +126,4 @@ public class TeacherDashboard implements DomainEntity {
                 ", questionStats=" + questionStats +
                 '}';
     }
-
-
 }

@@ -304,9 +304,12 @@ class SpockTest extends Specification {
     StudentStatsRepository studentStatsRepository
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> feat(ESA_1.2): Implement tests
+=======
+>>>>>>> 384fdef6198eceada3cc3dab579868c3671c3665
     @Autowired
     DemoUtils demoUtils
 
