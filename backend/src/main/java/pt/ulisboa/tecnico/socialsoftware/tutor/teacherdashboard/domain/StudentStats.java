@@ -26,7 +26,7 @@ public class StudentStats implements DomainEntity {
 
     @ManyToOne
     private TeacherDashboard teacherDashboard;
-    
+
     public StudentStats() {
     }
 
@@ -54,7 +54,7 @@ public class StudentStats implements DomainEntity {
                 numberOfCorrectAnswers += quizAnswer.getNumberOfCorrectAnswers();
                 numberOfAnsweredQuestions += quizAnswer.getNumberOfAnsweredQuestions();
             }
-            
+
             if (numberOfCorrectAnswers > 0.75 * numberOfAnsweredQuestions) {
                 calculation++;
             }
@@ -70,7 +70,7 @@ public class StudentStats implements DomainEntity {
             for (var quizAnswer : student.getQuizAnswers()) {
                 numberOfAnsweredQuestions += quizAnswer.getNumberOfAnsweredQuestions();
             }
-            
+
             if (numberOfAnsweredQuestions >= 3) {
                 calculation++;
             }

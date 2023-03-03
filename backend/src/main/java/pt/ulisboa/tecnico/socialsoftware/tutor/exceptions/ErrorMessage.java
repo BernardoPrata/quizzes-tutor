@@ -181,6 +181,7 @@ public enum ErrorMessage {
     CANNOT_REMOVE_FAILED_ANSWER("Cannot remove failed answer"),
     INVALID_QUIZZES_NUMBER("Invalid Number of Quizzes."),
     INVALID_QUESTIONS_NUMBER("Invalid Number of Questions"),
+    INVALID_NUMBER_OF_UNIQUE_ANSWERED_QUESTIONS("Invalid number of unique answered questions"),
 
     DUPLICATE_STUDENT_STATS("Duplicate student stats"),
     INVALID_STUDENT_STATS("Invalid student stats");

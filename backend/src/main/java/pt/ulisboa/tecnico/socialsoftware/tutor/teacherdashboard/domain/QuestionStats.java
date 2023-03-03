@@ -24,6 +24,8 @@ public class QuestionStats implements DomainEntity {
 
     private int numAvailable;
 
+    private int answeredQuestionUnique;
+
     @OneToOne
     @JoinColumn(name = "course_execution_id", unique = true)
     private CourseExecution courseExecution;
@@ -56,6 +58,22 @@ public class QuestionStats implements DomainEntity {
         // int calculation = courseExecution.getQuestionSubmissions().size();
         if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_QUESTIONS_NUMBER);
         else setNumAvailable(calculation);
+
+        int unique_questions = 0;
+        Set<QuizQuestion> questionsSet = new HashSet<>();
+
+        courseExecution.getQuizzes()
+                .forEach(quiz -> quiz.getQuizQuestions()
+                        .forEach(quizQuestion -> questionsSet.add(quizQuestion))
+                );
+
+        for (QuizQuestion question: questionsSet) {
+            if (question.getQuestionAnswers().size() > 0) {
+                unique_questions += 1;
+            }
+        }
+        if (unique_questions < 0) throw new TutorException(ErrorMessage.INVALID_NUMBER_OF_UNIQUE_ANSWERED_QUESTIONS);
+        setAnsweredQuestionUnique(unique_questions);
     }
 
     public Integer getId() { return id; }
@@ -64,6 +82,12 @@ public class QuestionStats implements DomainEntity {
 
     public void setNumAvailable(int numAvailable) {
         this.numAvailable = numAvailable;
+    }
+
+    public int getAnsweredQuestionUnique(){ return this.answeredQuestionUnique; }
+
+    public void setAnsweredQuestionUnique(int answeredQuestionUnique) {
+        this.answeredQuestionUnique = answeredQuestionUnique;
     }
 
     public CourseExecution getCourseExecution() { return courseExecution; }
@@ -87,6 +111,7 @@ public class QuestionStats implements DomainEntity {
     public String toString() {
         return "QuestionStats{" +
                 "id=" + id +
+                ", answeredQuestionUnique=" + answeredQuestionUnique +
                 ", numAvailable=" + numAvailable +
                 ", courseExecution=" + courseExecution +
                 ", teacherDashboard=" + teacherDashboard +
