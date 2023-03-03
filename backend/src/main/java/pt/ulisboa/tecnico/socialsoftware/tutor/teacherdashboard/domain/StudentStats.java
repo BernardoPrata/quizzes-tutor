@@ -18,12 +18,16 @@ public class StudentStats implements DomainEntity {
     private Integer id;
 
     private int numStudents;
+    private int numStudentsWithMoreThan75PerCentCorrectAnswers;
 
     @OneToOne
     private CourseExecution courseExecution;
 
     @ManyToOne
     private TeacherDashboard teacherDashboard;
+    
+    public StudentStats() {
+    }
 
     public StudentStats(CourseExecution courseExecution, TeacherDashboard teacherDashboard) {
         setCourseExecution(courseExecution);
@@ -39,6 +43,24 @@ public class StudentStats implements DomainEntity {
         int calculation = courseExecution.getStudents().size();
         if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_STUDENT_STATS);
         else setNumStudents(calculation);
+
+        calculation = 0;
+        for (var student : courseExecution.getStudents()) {
+            int numberOfCorrectAnswers = 0;
+            int numberOfAnsweredQuestions = 0;
+
+            for (var quizAnswer : student.getQuizAnswers()) {
+                numberOfCorrectAnswers += quizAnswer.getNumberOfCorrectAnswers();
+                numberOfAnsweredQuestions += quizAnswer.getNumberOfAnsweredQuestions();
+            }
+            
+            if (numberOfCorrectAnswers > 0.75 * numberOfAnsweredQuestions) {
+                calculation++;
+            }
+        }
+
+        if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_STUDENT_STATS);
+        else setNumStudentsWithMoreThan75PerCentCorrectAnswers(calculation);
     }
 
     public Integer getId() {
@@ -70,6 +92,14 @@ public class StudentStats implements DomainEntity {
         this.numStudents = numStudents;
     }
 
+    public int getNumStudentsWithMoreThan75PerCentCorrectAnswers() {
+        return numStudentsWithMoreThan75PerCentCorrectAnswers;
+    }
+
+    public void setNumStudentsWithMoreThan75PerCentCorrectAnswers(int numStudentsWithMoreThan75PerCentCorrectAnswers) {
+        this.numStudentsWithMoreThan75PerCentCorrectAnswers = numStudentsWithMoreThan75PerCentCorrectAnswers;
+    }
+
     public void accept(Visitor visitor) {
         // Only used for XML generation
     }
@@ -81,6 +111,7 @@ public class StudentStats implements DomainEntity {
                 ", courseExecution=" + courseExecution +
                 ", teacherDashboard=" + teacherDashboard +
                 ", numStudents=" + numStudents +
+                ", numStudentsWithMoreThan75PerCentCorrectAnswers=" + numStudentsWithMoreThan75PerCentCorrectAnswers +
                 '}';
     }
 
