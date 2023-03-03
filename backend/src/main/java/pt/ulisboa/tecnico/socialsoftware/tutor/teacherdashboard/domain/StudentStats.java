@@ -19,6 +19,7 @@ public class StudentStats implements DomainEntity {
 
     private int numStudents;
     private int numStudentsWithMoreThan75PerCentCorrectAnswers;
+    private int numStudentsWithAtLeastThreeQuestionsAnswered;
 
     @OneToOne
     private CourseExecution courseExecution;
@@ -61,6 +62,22 @@ public class StudentStats implements DomainEntity {
 
         if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_STUDENT_STATS);
         else setNumStudentsWithMoreThan75PerCentCorrectAnswers(calculation);
+
+        calculation = 0;
+        for (var student : courseExecution.getStudents()) {
+            int numberOfAnsweredQuestions = 0;
+
+            for (var quizAnswer : student.getQuizAnswers()) {
+                numberOfAnsweredQuestions += quizAnswer.getNumberOfAnsweredQuestions();
+            }
+            
+            if (numberOfAnsweredQuestions >= 3) {
+                calculation++;
+            }
+        }
+
+        if (calculation < 0) throw new TutorException(ErrorMessage.INVALID_STUDENT_STATS);
+        else setNumStudentsWithAtLeastThreeQuestionsAnswered(calculation);
     }
 
     public Integer getId() {
@@ -100,6 +117,14 @@ public class StudentStats implements DomainEntity {
         this.numStudentsWithMoreThan75PerCentCorrectAnswers = numStudentsWithMoreThan75PerCentCorrectAnswers;
     }
 
+    public int getNumStudentsWithAtLeastThreeQuestionsAnswered() {
+        return numStudentsWithAtLeastThreeQuestionsAnswered;
+    }
+
+    public void setNumStudentsWithAtLeastThreeQuestionsAnswered(int numStudentsWithAtLeastThreeQuestionsAnswered) {
+        this.numStudentsWithAtLeastThreeQuestionsAnswered = numStudentsWithAtLeastThreeQuestionsAnswered;
+    }
+
     public void accept(Visitor visitor) {
         // Only used for XML generation
     }
@@ -112,6 +137,7 @@ public class StudentStats implements DomainEntity {
                 ", teacherDashboard=" + teacherDashboard +
                 ", numStudents=" + numStudents +
                 ", numStudentsWithMoreThan75PerCentCorrectAnswers=" + numStudentsWithMoreThan75PerCentCorrectAnswers +
+                ", numStudentsWithAtLeastThreeQuestionsAnswered=" + numStudentsWithAtLeastThreeQuestionsAnswered +
                 '}';
     }
 
