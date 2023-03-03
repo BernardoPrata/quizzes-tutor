@@ -127,7 +127,7 @@ public class TeacherDashboard implements DomainEntity {
                 ", teacher=" + teacher +
                 ", quizStats=" + quizStats +
                 ", questionStats=" + questionStats +
-                ", + studentsStats=" + studentsStats +
+                ", studentsStats=" + studentsStats +
                 '}';
     }
 
