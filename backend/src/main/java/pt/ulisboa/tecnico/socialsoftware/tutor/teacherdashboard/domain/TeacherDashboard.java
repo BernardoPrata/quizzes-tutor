@@ -34,9 +34,6 @@ public class TeacherDashboard implements DomainEntity {
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<QuestionStats> questionStats = new ArrayList<>();
 
-    public TeacherDashboard() {
-    }
-
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
         setTeacher(teacher);
@@ -50,7 +47,7 @@ public class TeacherDashboard implements DomainEntity {
     public Integer getId() {
         return id;
     }
-
+    
     public CourseExecution getCourseExecution() {
         return courseExecution;
     }
@@ -91,10 +88,6 @@ public class TeacherDashboard implements DomainEntity {
         }
         questionStats.add(newQuestionStats);
     }
-    
-    public List<StudentStats> getStudentsStats() {
-        return this.studentsStats;
-    }
 
     public void addStudentStats(StudentStats newStudentStats){
         if (studentsStats.stream()
@@ -105,6 +98,10 @@ public class TeacherDashboard implements DomainEntity {
         studentsStats.add(newStudentStats);
     }
 
+    public List<StudentStats> getStudentsStats() {
+        return this.studentsStats;
+    }
+
     public void update(){
         for (QuizStats quizStat : quizStats) {
             quizStat.update();
@@ -112,7 +109,6 @@ public class TeacherDashboard implements DomainEntity {
         for (QuestionStats questionStat : questionStats) {
             questionStat.update();
         }
-        studentsStats.forEach(StudentStats::update);
     }
 
     public void accept(Visitor visitor) {
@@ -126,8 +122,8 @@ public class TeacherDashboard implements DomainEntity {
                 ", courseExecution=" + courseExecution +
                 ", teacher=" + teacher +
                 ", quizStats=" + quizStats +
-                ", questionStats=" + questionStats +
                 ", studentsStats=" + studentsStats +
+                ", questionStats=" + questionStats +
                 '}';
     }
 
