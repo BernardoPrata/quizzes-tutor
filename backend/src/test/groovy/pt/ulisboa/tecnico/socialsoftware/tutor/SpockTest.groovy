@@ -55,6 +55,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.utils.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.Mailer
 import spock.lang.Shared
 import spock.lang.Specification
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.StudentStatsRepository
 
 import java.time.LocalDateTime
 
@@ -298,6 +299,10 @@ class SpockTest extends Specification {
 
     @Autowired
     ReplyRepository replyRepository
+
+    @Autowired
+    StudentStatsRepository studentStatsRepository
+
 
     @Autowired
     DemoUtils demoUtils
