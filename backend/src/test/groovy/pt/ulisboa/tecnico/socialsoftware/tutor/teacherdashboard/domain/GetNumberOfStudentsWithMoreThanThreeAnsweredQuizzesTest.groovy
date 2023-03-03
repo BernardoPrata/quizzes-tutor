@@ -24,10 +24,8 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.StudentSt
 import pt.ulisboa.tecnico.socialsoftware.tutor.utils.DateHandler
 import spock.lang.Unroll
 
-import pt.ulisboa.tecnico.socialsoftware.tutor.studentdashboard.service.FailedAnswersSpockTest
-
 @DataJpaTest
-class GetNumberOfStudentsWithMoreThan75PerCentCorrectAnswersTest extends SpockTest { 
+class GetNumberOfStudentsWithMoreThanThreeAnsweredQuizzesTest extends SpockTest { 
     def teacher
     def course
     def courseExecution
@@ -109,33 +107,35 @@ class GetNumberOfStudentsWithMoreThan75PerCentCorrectAnswersTest extends SpockTe
         student3 = new Student(USER_3_NAME, false)
     }
 
-    def "get total number of students with more than 75 per cent correct answers with 0 students that fit the criteria"() {
+    def "get total number of students with more and equal to 3 answered quizzes, with 0 students that fit the criteria"() {
         when: "the statistics are updated"
         studentStats.update()
-        def result = studentStats.getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        def result = studentStats.getNumStudentsWithAtLeastThreeQuestionsAnswered()
 
         then: "the returned number of students is correct"
         dashboard.getStudentsStats().size() == 1
         result == 0
-        result == dashboard.getStudentsStats().get(0).getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        result == dashboard.getStudentsStats().get(0).getNumStudentsWithAtLeastThreeQuestionsAnswered()
     }
 
-    def "get total number of students with more than 75 per cent correct answers with 1 students that fits the criteria"() {
-        given: "a new student with 100 per cent correct answers (1 quizzes, 1 correct)"
+    def "get total number of students with more and equal to 3 answered quizzes, with 1 students that fits the criteria"() {
+        given: "a new student with answers 1 quiz"
         student1.addCourse(courseExecution)
-        def questionAnswer = create_and_answer_quiz(courseExecution, student1, true)
+        def questionAnswer1 = create_and_answer_quiz(courseExecution, student1, true)
+        def questionAnswer2 = create_and_answer_quiz(courseExecution, student1, true)
+        def questionAnswer3 = create_and_answer_quiz(courseExecution, student1, false)
 
         when: "the statistics are updated"
         studentStats.update()
-        def result = studentStats.getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        def result = studentStats.getNumStudentsWithAtLeastThreeQuestionsAnswered()
 
         then: "the returned number of students is correct"
         dashboard.getStudentsStats().size() == 1
         result == 1
-        result == dashboard.getStudentsStats().get(0).getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        result == dashboard.getStudentsStats().get(0).getNumStudentsWithAtLeastThreeQuestionsAnswered()
     }
 
-    def "get total number of students with more than 75 per cent correct answers with 1 students that doesn't fit the criteria"() {
+    def "get total number of students with more and equal to 3 answered quizzes, with 1 students that doesn't fit the criteria"() {
         given: "a new student with 50 per cent correct answers (2 quizzes, 1 correct)"
         student1.addCourse(courseExecution)
         def questionAnswer1 = create_and_answer_quiz(courseExecution, student1, true)
@@ -143,29 +143,32 @@ class GetNumberOfStudentsWithMoreThan75PerCentCorrectAnswersTest extends SpockTe
 
         when: "the statistics are updated"
         studentStats.update()
-        def result = studentStats.getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        def result = studentStats.getNumStudentsWithAtLeastThreeQuestionsAnswered()
 
         then: "the returned number of students is correct"
         dashboard.getStudentsStats().size() == 1
         result == 0
-        result == dashboard.getStudentsStats().get(0).getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        result == dashboard.getStudentsStats().get(0).getNumStudentsWithAtLeastThreeQuestionsAnswered()
     }
 
-    def "get total number of students with more than 75 per cent correct answers with 2 students, one that fits the criteria and another that doesn't fit the criteria"() {
+    def "get total number of students with more and equal to 3 answered quizzes, with 2 students, one that fits the criteria and another that doesn't fit the criteria"() {
         given: "2 new students with 0 per cent correct answers (2 quizzes, 0 correct)"
         student1.addCourse(courseExecution)
         student2.addCourse(courseExecution)
         def questionAnswer1 = create_and_answer_quiz(courseExecution, student1, true)
-        def questionAnswer2 = create_and_answer_quiz(courseExecution, student2, false)
+        def questionAnswer2 = create_and_answer_quiz(courseExecution, student1, false)
+        def questionAnswer3 = create_and_answer_quiz(courseExecution, student2, false)
+        def questionAnswer4 = create_and_answer_quiz(courseExecution, student2, true)
+        def questionAnswer5 = create_and_answer_quiz(courseExecution, student2, false)
 
         when: "the statistics are updated"
         studentStats.update()
-        def result = studentStats.getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        def result = studentStats.getNumStudentsWithAtLeastThreeQuestionsAnswered()
 
         then: "the returned number of students is correct"
         dashboard.getStudentsStats().size() == 1
         result == 1
-        result == dashboard.getStudentsStats().get(0).getNumStudentsWithMoreThan75PerCentCorrectAnswers()
+        result == dashboard.getStudentsStats().get(0).getNumStudentsWithAtLeastThreeQuestionsAnswered()
     }
 
     @TestConfiguration
