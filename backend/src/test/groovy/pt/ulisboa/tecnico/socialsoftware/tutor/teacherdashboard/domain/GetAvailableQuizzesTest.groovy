@@ -45,7 +45,7 @@ class GetAvailableQuizzesTest extends SpockTest {
         dashboard = new TeacherDashboard(courseExecution, teacher)
         teacherDashboardRepository.save(dashboard)
 
-        quizStats = new QuizStats(dashboard, courseExecution)
+        quizStats = new QuizStats(courseExecution, dashboard)
         quizStatsRepository.save(quizStats)
     }
 
@@ -205,7 +205,7 @@ class GetAvailableQuizzesTest extends SpockTest {
         courseExecutionRepository.save(courseExecution2)
 
         dashboard.setCourseExecution(courseExecution2)
-        def quizStats2 = new QuizStats(dashboard,courseExecution2)
+        def quizStats2 = new QuizStats(courseExecution2, dashboard)
         quizStatsRepository.save(quizStats2)
 
         when:

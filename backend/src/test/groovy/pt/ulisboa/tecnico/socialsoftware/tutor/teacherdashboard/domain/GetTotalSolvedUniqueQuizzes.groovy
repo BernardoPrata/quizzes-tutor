@@ -51,7 +51,7 @@ class GetTotalSolvedUniqueQuizzes extends SpockTest {
         dashboard = new TeacherDashboard(courseExecution, teacher)
         teacherDashboardRepository.save(dashboard)
 
-        quizStats = new QuizStats(dashboard, courseExecution)
+        quizStats = new QuizStats(courseExecution, dashboard)
         quizStatsRepository.save(quizStats)
 
 

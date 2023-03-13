@@ -6,7 +6,6 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.Visitor;
 import javax.persistence.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
-import java.util.ArrayList;
 
 @Entity
 public class QuizStats implements DomainEntity{
@@ -27,11 +26,15 @@ public class QuizStats implements DomainEntity{
     @ManyToOne
     private TeacherDashboard teacherDashboard;
 
-    public QuizStats(TeacherDashboard teacherDashboard, CourseExecution courseExecution)
+    public QuizStats(CourseExecution courseExecution, TeacherDashboard teacherDashboard)
     {
         setCourseExecution(courseExecution);        
         setTeacherDashboard(teacherDashboard);
 
+    }
+
+    public QuizStats() {
+        
     }
 
     public void remove(){
