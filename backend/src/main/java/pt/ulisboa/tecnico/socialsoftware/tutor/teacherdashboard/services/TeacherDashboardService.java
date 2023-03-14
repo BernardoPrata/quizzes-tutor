@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.TutorException;
 import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.execution.repository.CourseExecutionRepository;
-import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.TeacherDashboard;
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.dto.TeacherDashboardDto;
-import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.TeacherDashboardRepository;
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.repository.*;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.domain.Teacher;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.repository.TeacherRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static pt.ulisboa.tecnico.socialsoftware.tutor.exceptions.ErrorMessage.*;
 
@@ -28,6 +29,15 @@ public class TeacherDashboardService {
 
     @Autowired
     private TeacherDashboardRepository teacherDashboardRepository;
+
+    @Autowired
+    private StudentStatsRepository studentStatsRepository;
+
+    @Autowired
+    private QuestionStatsRepository questionStatsRepository;
+
+    @Autowired
+    private QuizStatsRepository quizStatsRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public TeacherDashboardDto getTeacherDashboard(int courseExecutionId, int teacherId) {
@@ -50,8 +60,10 @@ public class TeacherDashboardService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public TeacherDashboardDto createTeacherDashboard(int courseExecutionId, int teacherId) {
+
         CourseExecution courseExecution = courseExecutionRepository.findById(courseExecutionId)
                 .orElseThrow(() -> new TutorException(COURSE_EXECUTION_NOT_FOUND));
+
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new TutorException(USER_NOT_FOUND, teacherId));
 
@@ -66,6 +78,32 @@ public class TeacherDashboardService {
 
     private TeacherDashboardDto createAndReturnTeacherDashboardDto(CourseExecution courseExecution, Teacher teacher) {
         TeacherDashboard teacherDashboard = new TeacherDashboard(courseExecution, teacher);
+
+        QuizStats quizStats = new QuizStats(courseExecution, teacherDashboard);
+        StudentStats studentStats = new StudentStats(courseExecution, teacherDashboard);
+        QuestionStats questionStats = new QuestionStats(courseExecution, teacherDashboard);
+
+        quizStatsRepository.save(quizStats);
+        studentStatsRepository.save(studentStats);
+        questionStatsRepository.save(questionStats);
+
+        Set<CourseExecution> allCourseExecutions = courseExecution.getCourse().getCourseExecutions();
+        List<CourseExecution> previous2Executions = allCourseExecutions.stream()
+                .filter(execution -> execution.getYear() < courseExecution.getYear())
+                .sorted(Comparator.comparing(CourseExecution::getYear))
+                .limit(2)
+                .collect(Collectors.toList());
+
+        for (CourseExecution previousExecution : previous2Executions) {
+            QuizStats previousQuizStats = new QuizStats(previousExecution, teacherDashboard);
+            StudentStats previousStudentStats = new StudentStats(previousExecution, teacherDashboard);
+            QuestionStats previousQuestionStats = new QuestionStats(previousExecution, teacherDashboard);
+
+            quizStatsRepository.save(previousQuizStats);
+            studentStatsRepository.save(previousStudentStats);
+            questionStatsRepository.save(previousQuestionStats);
+        }
+
         teacherDashboardRepository.save(teacherDashboard);
 
         return new TeacherDashboardDto(teacherDashboard);
