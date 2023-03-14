@@ -9,9 +9,9 @@ import java.util.List;
 public class TeacherDashboardDto {
     private Integer id;
 
-    private int[] numberOfStudents, numberOfQuizzes, numberOfQuestions;
-    private int[] numStudentsOver75perc, uniqueQuizzesSolved, uniqueQuestionsSolved;
-    private int[] numStudentsOver3quizes; private float[] averageSolvedQuizes, averageSolvedCorrectQuestions;
+    private int[] numberOfStudents=new int[3], numberOfQuizzes=new int[3], numberOfQuestions=new int[3];
+    private int[] numStudentsOver75perc=new int[3], uniqueQuizzesSolved=new int[3], uniqueQuestionsSolved=new int[3];
+    private int[] numStudentsOver3quizes=new int[3]; private float[] averageSolvedQuizes=new float[3], averageSolvedCorrectQuestions=new float[3];
 
     public TeacherDashboardDto() {
     }
