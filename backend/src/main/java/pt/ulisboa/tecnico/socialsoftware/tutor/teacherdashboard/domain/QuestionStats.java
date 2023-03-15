@@ -29,8 +29,8 @@ public class QuestionStats implements DomainEntity {
 
     private int answeredQuestionUnique;
 
-    @OneToOne
-    @JoinColumn(name = "course_execution_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "course_execution_id")
     private CourseExecution courseExecution;
 
     @ManyToOne

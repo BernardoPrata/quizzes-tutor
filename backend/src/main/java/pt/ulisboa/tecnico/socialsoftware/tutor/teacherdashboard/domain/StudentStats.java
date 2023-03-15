@@ -20,8 +20,8 @@ public class StudentStats implements DomainEntity {
     private int numStudents;
     private int numStudentsWithMoreThan75PerCentCorrectAnswers;
     private int numStudentsWithAtLeastThreeQuestionsAnswered;
-
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "course_execution_id")
     private CourseExecution courseExecution;
 
     @ManyToOne

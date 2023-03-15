@@ -19,8 +19,8 @@ public class QuizStats implements DomainEntity{
 
     private float averageSolvedNumQuizzes;
 
-    @OneToOne
-    @JoinColumn(name = "course_execution_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "course_execution_id")
     private CourseExecution courseExecution;
 
     @ManyToOne
