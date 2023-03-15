@@ -78,6 +78,7 @@ public class TeacherDashboardService {
 
     private TeacherDashboardDto createAndReturnTeacherDashboardDto(CourseExecution courseExecution, Teacher teacher) {
         TeacherDashboard teacherDashboard = new TeacherDashboard(courseExecution, teacher);
+        teacherDashboardRepository.save(teacherDashboard);
 
         QuizStats quizStats = new QuizStats(courseExecution, teacherDashboard);
         StudentStats studentStats = new StudentStats(courseExecution, teacherDashboard);
@@ -88,8 +89,15 @@ public class TeacherDashboardService {
         questionStatsRepository.save(questionStats);
 
         Set<CourseExecution> allCourseExecutions = courseExecution.getCourse().getCourseExecutions();
+
         List<CourseExecution> previous2Executions = allCourseExecutions.stream()
-                .filter(execution -> execution.getYear() < courseExecution.getYear())
+                .filter(execution -> {
+                    try {
+                        return execution.getYear() < courseExecution.getYear();
+                    } catch (IllegalStateException e) {
+                        return false;
+                    }
+                })
                 .sorted(Comparator.comparing(CourseExecution::getYear))
                 .limit(2)
                 .collect(Collectors.toList());
@@ -103,8 +111,6 @@ public class TeacherDashboardService {
             studentStatsRepository.save(previousStudentStats);
             questionStatsRepository.save(previousQuestionStats);
         }
-
-        teacherDashboardRepository.save(teacherDashboard);
 
         return new TeacherDashboardDto(teacherDashboard);
     }
