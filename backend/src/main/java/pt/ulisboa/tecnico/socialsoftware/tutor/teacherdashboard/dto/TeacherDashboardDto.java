@@ -9,9 +9,10 @@ import java.util.List;
 public class TeacherDashboardDto {
     private Integer id;
 
-    private int[] numberOfStudents=new int[3], numberOfQuizzes=new int[3], numberOfQuestions=new int[3];
-    private int[] numStudentsOver75perc=new int[3], uniqueQuizzesSolved=new int[3], uniqueQuestionsSolved=new int[3];
-    private int[] numStudentsOver3quizes=new int[3]; private float[] averageSolvedQuizes=new float[3], averageSolvedCorrectQuestions=new float[3];
+    private int[] executionYears = new int[3];
+    private int[] numberOfStudents = new int[3], numberOfQuizzes = new int[3], numberOfQuestions = new int[3];
+    private int[] numStudentsOver75perc = new int[3], uniqueQuizzesSolved = new int[3], uniqueQuestionsSolved = new int[3];
+    private int[] numStudentsOver3quizes = new int[3]; private float[] averageSolvedQuizes = new float[3], averageSolvedCorrectQuestions = new float[3];
 
     public TeacherDashboardDto() {
     }
@@ -23,7 +24,9 @@ public class TeacherDashboardDto {
         List<QuizStats> quizStats = teacherDashboard.getQuizStats();
         List<QuestionStats> questionStats = teacherDashboard.getQuestionStats();
 
-        for (int i = studentsStats.size() - 1, j = 0; i >= studentsStats.size() - 3 && i >= 0; i--, j++) {
+        for (int i = studentsStats.size() - 1, j = 2; i >= studentsStats.size() - 3 && i >= 0; i--, j--) {
+            executionYears[j] = studentsStats.get(i).getCourseExecution().getYear();
+
             numberOfStudents[j] = studentsStats.get(i).getNumStudents();
             numStudentsOver75perc[j] = studentsStats.get(i).getNumStudentsWithMoreThan75PerCentCorrectAnswers();
             numStudentsOver3quizes[j] = studentsStats.get(i).getNumStudentsWithAtLeastThreeQuestionsAnswered();
@@ -36,6 +39,14 @@ public class TeacherDashboardDto {
             uniqueQuestionsSolved[j] = questionStats.get(i).getAnsweredQuestionUnique();
             averageSolvedCorrectQuestions[j] = questionStats.get(i).getAverageQuestionsAnswered();
         }
+    }
+
+    public int[] getExecutionYears() {
+        return executionYears;
+    }
+
+    public void setExecutionYears(int[] executionYears) {
+        this.executionYears = executionYears;
     }
 
     public Integer getId() {
@@ -123,6 +134,7 @@ public class TeacherDashboardDto {
     public String toString() {
         return "TeacherDashboardDto{" +
                 "id=" + id +
+                ", executionYears=" + Arrays.toString(executionYears) +
                 ", numberOfStudents=" + Arrays.toString(numberOfStudents) +
                 ", numberOfQuizzes=" + Arrays.toString(numberOfQuizzes) +
                 ", numberOfQuestions=" + Arrays.toString(numberOfQuestions) +
