@@ -28,6 +28,22 @@ class RemoveTeacherDashboardTest extends SpockTest {
         return dashboard
     }
 
+    def createQuizStats(dashboard) {
+        def quizStats = new QuizStats(externalCourseExecution, dashboard)
+        quizStatsRepository.save(quizStats)
+        return quizStats
+    } 
+     def createStudentStats(dashboard) {
+        def studentstats = new StudentStats(externalCourseExecution, dashboard)
+        studentStatsRepository.save(studentstats)
+        return studentstats
+    }
+     def createQuestionStats(dashboard) {
+        def questionstats = new QuestionStats(externalCourseExecution, dashboard)
+        questionStatsRepository.save(questionstats)
+        return questionstats
+    }
+
     def "remove a dashboard"() {
         given: "a dashboard"
         def dashboard = createTeacherDashboard()
@@ -64,6 +80,27 @@ class RemoveTeacherDashboardTest extends SpockTest {
 
         where:
         dashboardId << [null, 10, -1]
+    }
+
+    def "remove a dashboard with stats associated"(){
+        given: "a dashboard with stats"
+        def dashboard = createTeacherDashboard()
+        def quizStats = createQuizStats(dashboard)
+        def studentStats = createStudentStats(dashboard)
+        def questionStats = createQuestionStats(dashboard)
+
+        when: "the dashboard is removed"
+        teacherDashboardService.removeTeacherDashboard(dashboard.getId())
+
+        then: "stats are dissociated from the dashboard but still exist in the database"
+        quizStatsRepository.findAll().size() == 1L
+        quizStats.getTeacherDashboard() == null
+
+        studentStatsRepository.findAll().size() == 1L
+        studentStats.getTeacherDashboard() == null
+
+        questionStatsRepository.findAll().size() == 1L
+        questionStats.getTeacherDashboard() == null
     }
 
     @TestConfiguration

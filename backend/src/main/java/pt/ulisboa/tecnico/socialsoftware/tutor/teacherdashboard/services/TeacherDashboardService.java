@@ -79,6 +79,10 @@ public class TeacherDashboardService {
         TeacherDashboard teacherDashboard = teacherDashboardRepository.findById(dashboardId).orElseThrow(() -> new TutorException(DASHBOARD_NOT_FOUND, dashboardId));
         teacherDashboard.remove();
         teacherDashboardRepository.delete(teacherDashboard);
+
+        //teacherDashboard.getQuizStats().remove();
+        //teacherDashboard.getStudentsStats.remove();
+        //teacherDashboard.getQuizStats.remove();
     }
 
 }
