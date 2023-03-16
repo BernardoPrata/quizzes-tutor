@@ -29,4 +29,10 @@ public class TeacherDashboardController {
         return teacherDashboardService.getTeacherDashboard(courseExecutionId, teacherId);
     }
 
+    @GetMapping("/teachers/dashboards/remove/{teacherDashboardId}")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#teacherDashboardId, 'TEACHERDASHBOARD.ACCESS')")
+    public void removeTeacherDashboard(Principal principal, @PathVariable int teacherDashboardId) {
+        teacherDashboardService.removeTeacherDashboard(teacherDashboardId);
+    }
+
 }
