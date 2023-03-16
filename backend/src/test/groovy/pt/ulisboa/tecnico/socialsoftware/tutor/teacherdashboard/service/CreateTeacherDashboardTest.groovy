@@ -92,6 +92,23 @@ import spock.lang.Unroll
         teacherId << [0, 100]
     }
 
+    def "get statistics for a Course with only the current Course Execution"() {
+
+    }
+
+    def "get statistics are correct with 1 previous Course Execution"() {
+
+    }
+
+    def "get statistics are correct with 3 previous Course Executions"() {
+
+    }
+
+    def "create multiple dashboards for same course execution"() {
+
+    }
+
+
     @TestConfiguration
     static class LocalBeanConfiguration extends BeanConfiguration {}
 }
