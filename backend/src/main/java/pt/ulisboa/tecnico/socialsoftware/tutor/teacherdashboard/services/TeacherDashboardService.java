@@ -80,9 +80,6 @@ public class TeacherDashboardService {
         teacherDashboard.remove();
         teacherDashboardRepository.delete(teacherDashboard);
 
-        //teacherDashboard.getQuizStats().remove();
-        //teacherDashboard.getStudentsStats.remove();
-        //teacherDashboard.getQuizStats.remove();
     }
 
 }

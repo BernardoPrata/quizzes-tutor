@@ -27,9 +27,6 @@ public class TeacherDashboard implements DomainEntity {
     @ManyToOne
     private Teacher teacher;
 
-    public TeacherDashboard() {
-    }
-
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentStats> studentsStats = new ArrayList<>();
 
@@ -39,6 +36,8 @@ public class TeacherDashboard implements DomainEntity {
     @OneToMany(mappedBy = "teacherDashboard", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<QuestionStats> questionStats = new ArrayList<>();
 
+    public TeacherDashboard() {
+    }
 
     public TeacherDashboard(CourseExecution courseExecution, Teacher teacher) {
         setCourseExecution(courseExecution);
@@ -48,6 +47,10 @@ public class TeacherDashboard implements DomainEntity {
     public void remove() {
         teacher.getDashboards().remove(this);
         teacher = null;
+
+        // studentsStats.forEach(StudentStats::remove);
+        // quizStats.forEach(QuizStats::remove);
+        // questionStats.forEach(QuestionStats::remove);
     }
 
     public Integer getId() {
