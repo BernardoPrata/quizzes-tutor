@@ -76,10 +76,7 @@ public class TeacherDashboardService {
         return createAndReturnTeacherDashboardDto(courseExecution, teacher);
     }
 
-    private TeacherDashboardDto createAndReturnTeacherDashboardDto(CourseExecution courseExecution, Teacher teacher) {
-        TeacherDashboard teacherDashboard = new TeacherDashboard(courseExecution, teacher);
-        teacherDashboardRepository.save(teacherDashboard);
-
+    private void createStatsForCourseExecution(CourseExecution courseExecution, TeacherDashboard teacherDashboard) {
         QuizStats quizStats = new QuizStats(courseExecution, teacherDashboard);
         StudentStats studentStats = new StudentStats(courseExecution, teacherDashboard);
         QuestionStats questionStats = new QuestionStats(courseExecution, teacherDashboard);
@@ -87,10 +84,16 @@ public class TeacherDashboardService {
         quizStatsRepository.save(quizStats);
         studentStatsRepository.save(studentStats);
         questionStatsRepository.save(questionStats);
+    }
+    private TeacherDashboardDto createAndReturnTeacherDashboardDto(CourseExecution courseExecution, Teacher teacher) {
+        TeacherDashboard teacherDashboard = new TeacherDashboard(courseExecution, teacher);
+        teacherDashboardRepository.save(teacherDashboard);
 
-        Set<CourseExecution> allCourseExecutions = courseExecution.getCourse().getCourseExecutions();
+        // stats are created for every courseExecution, despite maybe existing a quizStats already for
+        // that course execution => this will lead to some redundancy in the database but its OK
+        createStatsForCourseExecution(courseExecution, teacherDashboard);
 
-        List<CourseExecution> previous2Executions = allCourseExecutions.stream()
+        List<CourseExecution> previousExecutions = new ArrayList<>(courseExecution.getCourse().getCourseExecutions()).stream()
                 .filter(execution -> {
                     try {
                         return execution.getYear() < courseExecution.getYear();
@@ -98,18 +101,12 @@ public class TeacherDashboardService {
                         return false;
                     }
                 })
-                .sorted(Comparator.comparing(CourseExecution::getYear))
+                .sorted(Comparator.comparing(CourseExecution::getYear).reversed())
                 .limit(2)
                 .collect(Collectors.toList());
 
-        for (CourseExecution previousExecution : previous2Executions) {
-            QuizStats previousQuizStats = new QuizStats(previousExecution, teacherDashboard);
-            StudentStats previousStudentStats = new StudentStats(previousExecution, teacherDashboard);
-            QuestionStats previousQuestionStats = new QuestionStats(previousExecution, teacherDashboard);
-
-            quizStatsRepository.save(previousQuizStats);
-            studentStatsRepository.save(previousStudentStats);
-            questionStatsRepository.save(previousQuestionStats);
+        for (CourseExecution previousExecution : previousExecutions) {
+            createStatsForCourseExecution(previousExecution, teacherDashboard);
         }
 
         return new TeacherDashboardDto(teacherDashboard);
