@@ -1,4 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.dto;
+import java.lang.AssertionError;
+import java.lang.IllegalArgumentException;
 
 import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.*;
 
@@ -31,26 +33,24 @@ public class TeacherDashboardDto {
         List<QuizStats> quizStats = teacherDashboard.getQuizStats();
         List<QuestionStats> questionStats = teacherDashboard.getQuestionStats();
 
-        for (int i = studentsStats.size() - 1; i >= studentsStats.size() - 3 && i >= 0; i--) {
+        for (int i = 0; i < studentsStats.size() && i < 3; i++) {
             try {
-                executionYears.add(studentsStats.get(i).getCourseExecution().getYear());
+                addExecutionYear(studentsStats.get(i).getCourseExecution().getYear());
             } catch (IllegalStateException e) {
                 //false
             }
+            addNumberOfStudents( studentsStats.get(i).getNumStudents());
+            addNumStudentsOver75perc(studentsStats.get(i).getNumStudentsWithMoreThan75PerCentCorrectAnswers());
+            addNumStudentsOver3quizes(studentsStats.get(i).getNumStudentsWithAtLeastThreeQuestionsAnswered());
 
+            addNumberOfQuizzes(quizStats.get(i).getNumQuizzes());
+            addUniqueQuizzesSolved( quizStats.get(i).getTotalSolvedNumQuizzes());
+            addAverageSolvedQuizes( quizStats.get(i).getAverageSolvedNumQuizzes());
 
+            addNumberOfQuestions(questionStats.get(i).getNumAvailable());
+            addUniqueQuestionsSolved(questionStats.get(i).getAnsweredQuestionUnique());
+            addAverageSolvedCorrectQuestions(questionStats.get(i).getAverageQuestionsAnswered());
 
-            numberOfStudents.add( studentsStats.get(i).getNumStudents());
-            numStudentsOver75perc.add(studentsStats.get(i).getNumStudentsWithMoreThan75PerCentCorrectAnswers());
-            numStudentsOver3quizes.add(studentsStats.get(i).getNumStudentsWithAtLeastThreeQuestionsAnswered());
-
-            numberOfQuizzes.add(quizStats.get(i).getNumQuizzes());
-            uniqueQuizzesSolved.add( quizStats.get(i).getTotalSolvedNumQuizzes());
-            averageSolvedQuizes.add( quizStats.get(i).getAverageSolvedNumQuizzes());
-
-            numberOfQuestions.add(questionStats.get(i).getNumAvailable());
-            uniqueQuestionsSolved.add( questionStats.get(i).getAnsweredQuestionUnique());
-            averageSolvedCorrectQuestions.add(questionStats.get(i).getAverageQuestionsAnswered());
         }
     }
 
@@ -66,80 +66,80 @@ public class TeacherDashboardDto {
         return executionYears;
     }
 
-    public void setExecutionYears(List<Integer> executionYears) {
-        this.executionYears = executionYears;
+    public void addExecutionYear(Integer year) {
+        this.executionYears.add(year);
     }
 
     public List<Integer> getNumberOfStudents() {
         return numberOfStudents;
     }
 
-    public void setNumberOfStudents(List<Integer> numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
+    public void addNumberOfStudents(Integer numberOfStudents) {
+        this.numberOfStudents.add(numberOfStudents);
     }
 
     public List<Integer> getNumberOfQuizzes() {
         return numberOfQuizzes;
     }
 
-    public void setNumberOfQuizzes(List<Integer> numberOfQuizzes) {
-        this.numberOfQuizzes = numberOfQuizzes;
+    public void addNumberOfQuizzes(Integer numberOfQuizzes) {
+        this.numberOfQuizzes.add(numberOfQuizzes);
     }
 
     public List<Integer> getNumberOfQuestions() {
         return numberOfQuestions;
     }
 
-    public void setNumberOfQuestions(List<Integer> numberOfQuestions) {
-        this.numberOfQuestions = numberOfQuestions;
+    public void addNumberOfQuestions(Integer numberOfQuestions) {
+        this.numberOfQuestions.add(numberOfQuestions);
     }
 
     public List<Integer> getNumStudentsOver75perc() {
         return numStudentsOver75perc;
     }
 
-    public void setNumStudentsOver75perc(List<Integer> numStudentsOver75perc) {
-        this.numStudentsOver75perc = numStudentsOver75perc;
+    public void addNumStudentsOver75perc(Integer numStudentsOver75perc) {
+        this.numStudentsOver75perc.add(numStudentsOver75perc);
     }
 
     public List<Integer> getUniqueQuizzesSolved() {
         return uniqueQuizzesSolved;
     }
 
-    public void setUniqueQuizzesSolved(List<Integer> uniqueQuizzesSolved) {
-        this.uniqueQuizzesSolved = uniqueQuizzesSolved;
+    public void addUniqueQuizzesSolved(Integer uniqueQuizzesSolved) {
+        this.uniqueQuizzesSolved.add(uniqueQuizzesSolved);
     }
 
     public List<Integer> getUniqueQuestionsSolved() {
         return uniqueQuestionsSolved;
     }
 
-    public void setUniqueQuestionsSolved(List<Integer> uniqueQuestionsSolved) {
-        this.uniqueQuestionsSolved = uniqueQuestionsSolved;
+    public void addUniqueQuestionsSolved(Integer uniqueQuestionsSolved) {
+        this.uniqueQuestionsSolved.add(uniqueQuestionsSolved);
     }
 
     public List<Integer> getNumStudentsOver3quizes() {
         return numStudentsOver3quizes;
     }
 
-    public void setNumStudentsOver3quizes(List<Integer> numStudentsOver3quizes) {
-        this.numStudentsOver3quizes = numStudentsOver3quizes;
+    public void addNumStudentsOver3quizes(Integer numStudentsOver3quizes) {
+        this.numStudentsOver3quizes.add(numStudentsOver3quizes);
     }
 
     public List<Float> getAverageSolvedQuizes() {
         return averageSolvedQuizes;
     }
 
-    public void setAverageSolvedQuizes(List<Float> averageSolvedQuizes) {
-        this.averageSolvedQuizes = averageSolvedQuizes;
+    public void addAverageSolvedQuizes(Float averageSolvedQuizes) {
+        this.averageSolvedQuizes.add(averageSolvedQuizes);
     }
 
     public List<Float> getAverageSolvedCorrectQuestions() {
         return averageSolvedCorrectQuestions;
     }
 
-    public void setAverageSolvedCorrectQuestions(List<Float> averageSolvedCorrectQuestions) {
-        this.averageSolvedCorrectQuestions = averageSolvedCorrectQuestions;
+    public void addAverageSolvedCorrectQuestions(Float averageSolvedCorrectQuestions) {
+        this.averageSolvedCorrectQuestions.add(averageSolvedCorrectQuestions);
     }
 
     @java.lang.Override
