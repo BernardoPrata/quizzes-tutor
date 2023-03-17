@@ -117,7 +117,9 @@ public class QuestionStats implements DomainEntity {
 
     public void setTeacherDashboard(TeacherDashboard teacherDashboard) {
         this.teacherDashboard = teacherDashboard;
-        this.teacherDashboard.addQuestionStats(this);
+        if (teacherDashboard != null) {
+            this.teacherDashboard.addQuestionStats(this);
+        }
     }
 
     public void accept(Visitor visitor) {

@@ -47,10 +47,12 @@ public class TeacherDashboard implements DomainEntity {
     public void remove() {
         teacher.getDashboards().remove(this);
         teacher = null;
-
-        // studentsStats.forEach(StudentStats::remove);
-        // quizStats.forEach(QuizStats::remove);
-        // questionStats.forEach(QuestionStats::remove);
+        studentsStats.stream().forEach(studentStat -> studentStat.setTeacherDashboard(null));
+        studentsStats.clear();
+        quizStats.stream().forEach(quizStat -> quizStat.setTeacherDashboard(null));
+        quizStats.clear();
+        questionStats.stream().forEach(questionStat -> questionStat.setTeacherDashboard(null));
+        questionStats.clear();
     }
 
     public Integer getId() {
