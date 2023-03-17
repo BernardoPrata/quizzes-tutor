@@ -42,4 +42,10 @@ public class TeacherDashboardController {
         teacherDashboardService.removeTeacherDashboard(teacherDashboardId);
     }
 
+    @GetMapping("/teachers/dashboards/{dashboardId}/updateAllTeacherDashboards")
+    @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#courseExecutionId, 'EXECUTION.ACCESS')")
+    public void updateAllTeacherDashboards() {
+        teacherDashboardService.updateAllTeacherDashboards();
+    }
+
 }
