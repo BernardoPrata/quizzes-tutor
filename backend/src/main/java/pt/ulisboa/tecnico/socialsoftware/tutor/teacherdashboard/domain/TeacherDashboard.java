@@ -6,6 +6,7 @@ import pt.ulisboa.tecnico.socialsoftware.tutor.execution.domain.CourseExecution;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.DomainEntity;
 import pt.ulisboa.tecnico.socialsoftware.tutor.impexp.domain.Visitor;
 import pt.ulisboa.tecnico.socialsoftware.tutor.user.domain.Teacher;
+import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.StudentStats;
 import java.util.List;
 import java.util.ArrayList;
 import pt.ulisboa.tecnico.socialsoftware.tutor.teacherdashboard.domain.QuestionStats;
@@ -120,6 +121,9 @@ public class TeacherDashboard implements DomainEntity {
         }
         for (QuestionStats questionStat : questionStats) {
             questionStat.update();
+        }
+        for (StudentStats studentStat : studentsStats) {
+            studentStat.update();
         }
     }
 
