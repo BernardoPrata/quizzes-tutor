@@ -132,4 +132,11 @@ public class TeacherDashboardService {
         tDashboard.update();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void updateAllTeacherDashboards() {
+        teacherRepository.findAll().stream()
+                .forEach(teacher -> teacher.getDashboards()
+                        .forEach(tdashboard -> updateTeacherDashboard(tdashboard.getId())));
+    }
+
 }
