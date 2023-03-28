@@ -10,9 +10,42 @@
           <p>Number of Students</p>
         </div>
       </div>
+
+      <!-- New div to display the number of quizzes -->
+      <div class="items">
+        <div ref="totalQuizzes" class="icon-wrapper">
+          <animated-number :number="teacherDashboard.numberOfQuizzes" />
+        </div>
+        <div class="project-name">
+          <p>Number of Quizzes</p>
+        </div>
+      </div>
+
+      <!-- New div to display the number of quizzes solved (unique) -->
+      <div class="items">
+        <div ref="uniqueQuizzesSolved" class="icon-wrapper">
+          <animated-number :number="teacherDashboard.uniqueQuizzesSolved" />
+        </div>
+        <div class="project-name">
+          <p>Number of Quizzes Solved (Unique)</p>
+        </div>
+      </div>
+
+      <!-- New div to display the number of average quizzes solved -->
+      <div class="items">
+        <div ref="averageSolvedQuizes" class="icon-wrapper">
+          <animated-number :number="teacherDashboard.averageSolvedQuizes" />
+        </div>
+        <div class="project-name">
+          <p>Number of Quizzes Solved (Unique, Average per student)</p>
+        </div>
+      </div>
+
+
     </div>
-</div>
+  </div>
 </template>
+
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -89,7 +122,7 @@ export default class TeacherStatsView extends Vue {
 }
 
 .project-name p {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   letter-spacing: 2px;
   transform: translateY(0px);
