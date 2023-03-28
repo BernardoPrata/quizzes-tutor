@@ -65,7 +65,7 @@
       <div class="items">
         <div ref="" class="icon-wrapper">
           <!--TODO: alter this <animated-number> -->
-          <animated-number :number="teacherDashboard.numberOfQuizzes" />
+          <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
         </div>
         <div class="project-name">
           <p> TEMP </p>
@@ -91,31 +91,66 @@
           <p> TEMP </p>
         </div>
       </div>
-
-
     </div>
+
+    <h2>Comparison with previous course executions</h2>
+
+    <Bar :data="data" :options="options" />
   </div>
 </template>
-
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js';
+import { Bar } from 'vue-chartjs';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 @Component({
-  components: { AnimatedNumber },
+  components: { AnimatedNumber, Bar },
 })
 
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
+  data: Object | null = null;
+  options: Object | null = null;
 
   async created() {
     await this.$store.dispatch('loading');
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
+
+      this.options = {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+      this.data = {
+        labels: [
+          this.teacherDashboard?.executionYears[2],
+          this.teacherDashboard?.executionYears[1],
+          this.teacherDashboard?.executionYears[0],
+        ],
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: '#f87979',
+            data: [40, 20, 12]
+          }
+        ]
+      }
+
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
