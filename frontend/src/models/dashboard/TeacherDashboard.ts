@@ -9,6 +9,8 @@ export default class TeacherDashboard {
   uniqueQuizzesSolved!: number[];
 
   averageSolvedQuizes!: number[];
+
+  executionYears!: number[];
   constructor(jsonObj?: TeacherDashboard) {
     if (jsonObj) {
       this.id = jsonObj.id;
@@ -18,6 +20,7 @@ export default class TeacherDashboard {
       this.numberOfQuizzes = jsonObj.numberOfQuizzes;
       this.uniqueQuizzesSolved = jsonObj.uniqueQuizzesSolved;
       this.averageSolvedQuizes = jsonObj.averageSolvedQuizes;
+      this.executionYears = jsonObj.executionYears;
     }
   }
 }
