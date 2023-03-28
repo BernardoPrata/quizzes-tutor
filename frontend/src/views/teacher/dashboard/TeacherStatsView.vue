@@ -11,33 +11,84 @@
         </div>
       </div>
 
-      <!-- New div to display the number of quizzes -->
+      <!--TODO: finish this div -->
+      <div class="items">
+        <div ref="" class="icon-wrapper">
+          <!--TODO: Implement <animated-number> tag -->
+        </div>
+        <div class="project-name">
+          <p> TEMP </p>
+        </div>
+      </div>
+
+      <!--TODO: finish this div -->
+      <div class="items">
+        <div ref="" class="icon-wrapper">
+          <!--TODO: Implement <animated-number> tag -->
+        </div>
+        <div class="project-name">
+          <p> TEMP </p>
+        </div>
+      </div>
+
+      <!-- Div to display the number of quizzes -->
       <div class="items">
         <div ref="totalQuizzes" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numberOfQuizzes" />
+          <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
         </div>
         <div class="project-name">
           <p>Number of Quizzes</p>
         </div>
       </div>
 
-      <!-- New div to display the number of quizzes solved (unique) -->
+      <!-- Div to display the number of quizzes solved (unique) -->
       <div class="items">
         <div ref="uniqueQuizzesSolved" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.uniqueQuizzesSolved" />
+          <animated-number :number="teacherDashboard.uniqueQuizzesSolved[0]" />
         </div>
         <div class="project-name">
           <p>Number of Quizzes Solved (Unique)</p>
         </div>
       </div>
 
-      <!-- New div to display the number of average quizzes solved -->
+      <!-- Div to display the number of average quizzes solved -->
       <div class="items">
         <div ref="averageSolvedQuizes" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.averageSolvedQuizes" />
+          <animated-number :number="teacherDashboard.averageSolvedQuizes[0]" />
         </div>
         <div class="project-name">
           <p>Number of Quizzes Solved (Unique, Average per student)</p>
+        </div>
+      </div>
+
+      <!--TODO: finish this <div> -->
+      <div class="items">
+        <div ref="" class="icon-wrapper">
+          <!--TODO: alter this <animated-number> -->
+          <animated-number :number="teacherDashboard.numberOfQuizzes" />
+        </div>
+        <div class="project-name">
+          <p> TEMP </p>
+        </div>
+      </div>
+
+      <!--TODO: finish this div -->
+      <div class="items">
+        <div ref="" class="icon-wrapper">
+          <!--TODO: Implement <animated-number> tag -->
+        </div>
+        <div class="project-name">
+          <p> TEMP </p>
+        </div>
+      </div>
+
+      <!--TODO: finish this div -->
+      <div class="items">
+        <div ref="" class="icon-wrapper">
+          <!--TODO: Implement <animated-number> tag -->
+        </div>
+        <div class="project-name">
+          <p> TEMP </p>
         </div>
       </div>
 

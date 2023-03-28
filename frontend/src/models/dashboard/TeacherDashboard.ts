@@ -2,11 +2,11 @@ export default class TeacherDashboard {
   id!: number;
   numberOfStudents!: number;
 
-  numberOfQuizzes!: number;
+  numberOfQuizzes!: number[];
 
-  uniqueQuizzesSolved!: number;
+  uniqueQuizzesSolved!: number[];
 
-  averageSolvedQuizes!: number;
+  averageSolvedQuizes!: number[];
   constructor(jsonObj?: TeacherDashboard) {
     if (jsonObj) {
       this.id = jsonObj.id;
