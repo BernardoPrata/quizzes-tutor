@@ -10,6 +10,22 @@
           <p>Number of Students</p>
         </div>
       </div>
+      <div class="items">
+        <div ref="studentsWithMoreThan75PerCentCorrectAnswers" class="icon-wrapper">
+          <animated-number :number="teacherDashboard.numStudentsOver75perc" />
+        </div>
+        <div class="project-name">
+          <p>Number of Students who Solved >= 75% Questions</p>
+        </div>
+      </div>
+      <div class="items">
+        <div ref="studentsWithMoreThanThreeAnsweredQuizzes" class="icon-wrapper">
+          <animated-number :number="teacherDashboard.numStudentsOver3quizes" />
+        </div>
+        <div class="project-name">
+          <p>Number of Students who Solved >= 3 Quizzes</p>
+        </div>
+      </div>
     </div>
 </div>
 </template>
