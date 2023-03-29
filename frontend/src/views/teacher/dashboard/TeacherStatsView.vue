@@ -34,7 +34,7 @@
           <!--TODO: Implement <animated-number> tag -->
         </div>
         <div class="project-name">
-          <p> TEMP </p>
+          <p>TEMP</p>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
           <!--TODO: Implement <animated-number> tag -->
         </div>
         <div class="project-name">
-          <p> TEMP </p>
+          <p>TEMP</p>
         </div>
       </div>
 
@@ -85,7 +85,7 @@
           <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
         </div>
         <div class="project-name">
-          <p> TEMP </p>
+          <p>TEMP</p>
         </div>
       </div>
 
@@ -95,7 +95,7 @@
           <!--TODO: Implement <animated-number> tag -->
         </div>
         <div class="project-name">
-          <p> TEMP </p>
+          <p>TEMP</p>
         </div>
       </div>
 
@@ -105,13 +105,26 @@
           <!--TODO: Implement <animated-number> tag -->
         </div>
         <div class="project-name">
-          <p> TEMP </p>
+          <p>TEMP</p>
         </div>
       </div>
     </div>
     <h2>Comparison with previous course executions</h2>
 
-    <Bar :data="data" :options="options" />
+    <div v-if="teacherDashboard != null" class="stats-container">
+      <!-- Div to display the statistics about quizzes -->
+      <div class="bar-chart">
+        <Bar :chartData="data" :chartOptions="options" />
+      </div>
+      <div class="bar-chart">
+        <!-- TODO: Change bar content (used as a placeholder to test the positions of the bar charts)-->
+        <Bar :chartData="data" :chartOptions="options" />
+      </div>
+      <div class="bar-chart">
+        <!-- TODO: Change bar content (used as a placeholder to test the positions of the bar charts)-->
+        <Bar :chartData="data" :chartOptions="options" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -129,19 +142,25 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
-import { Bar } from 'vue-chartjs';
+import { Bar } from 'vue-chartjs/legacy';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 @Component({
   components: { AnimatedNumber, Bar },
 })
-
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
-  data: Object | null = null;
-  options: Object | null = null;
+  data: Object = {};
+  options: Object = {};
 
   async created() {
     await this.$store.dispatch('loading');
@@ -150,30 +169,55 @@ export default class TeacherStatsView extends Vue {
 
       this.options = {
         responsive: true,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+      };
+      // TODO: trocar valores fixos por valores dinâmicos
       this.data = {
         labels: [
-          this.teacherDashboard?.executionYears[2],
-          this.teacherDashboard?.executionYears[1],
-          this.teacherDashboard?.executionYears[0],
+          this.teacherDashboard?.executionYears[2]
+            ? this.teacherDashboard?.executionYears[2]
+            : ' ',
+          this.teacherDashboard?.executionYears[1]
+            ? this.teacherDashboard?.executionYears[1]
+            : ' ',
+          this.teacherDashboard?.executionYears[0] + ' (current)',
         ],
         datasets: [
           {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [40, 20, 12]
-          }
-        ]
-      }
-
+            label: 'Quizzes: Total Available',
+            backgroundColor: '#b14434',
+            data: [
+              this.teacherDashboard?.numberOfQuizzes[2],
+              this.teacherDashboard?.numberOfQuizzes[1],
+              this.teacherDashboard?.numberOfQuizzes[0],
+            ],
+          },
+          {
+            label: 'Quizzes: Solved (Unique)',
+            backgroundColor: '#437eb4',
+            data: [
+              this.teacherDashboard?.uniqueQuizzesSolved[2],
+              this.teacherDashboard?.uniqueQuizzesSolved[1],
+              this.teacherDashboard?.uniqueQuizzesSolved[0],
+            ],
+          },
+          {
+            label: 'Quizzes: Solved (Unique, Average per student)',
+            backgroundColor: '#58b99d',
+            data: [
+              this.teacherDashboard?.averageSolvedQuizes[2],
+              this.teacherDashboard?.averageSolvedQuizes[1],
+              this.teacherDashboard?.averageSolvedQuizes[0],
+            ],
+          },
+        ],
+      };
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -197,8 +241,10 @@ export default class TeacherStatsView extends Vue {
   }
 
   .bar-chart {
-    background-color: rgba(255, 255, 255, 0.90);
+    background-color: rgba(255, 255, 255, 0.9);
     height: 400px;
+    width: 800px;
+    margin: 30px;
   }
 }
 
