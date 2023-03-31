@@ -2,35 +2,6 @@
   <div class="container">
     <h2>Statistics for this course execution</h2>
     <div v-if="teacherDashboard != null" class="stats-container">
-      <div class="items">
-        <div ref="totalStudents" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numberOfStudents" />
-        </div>
-        <div class="project-name">
-          <p>Number of Students</p>
-        </div>
-      </div>
-
-      <!--TODO: finish this div -->
-      <div class="items">
-        <div ref="" class="icon-wrapper">
-          <!--TODO: Implement <animated-number> tag -->
-        </div>
-        <div class="project-name">
-          <p>TEMP</p>
-        </div>
-      </div>
-
-      <!--TODO: finish this div -->
-      <div class="items">
-        <div ref="" class="icon-wrapper">
-          <!--TODO: Implement <animated-number> tag -->
-        </div>
-        <div class="project-name">
-          <p>TEMP</p>
-        </div>
-      </div>
-
       <!-- Div to display the number of quizzes -->
       <div class="items">
         <div ref="totalQuizzes" class="icon-wrapper">
@@ -60,37 +31,6 @@
           <p>Number of Quizzes Solved (Unique, Average per student)</p>
         </div>
       </div>
-
-      <!--TODO: finish this <div> -->
-      <div class="items">
-        <div ref="" class="icon-wrapper">
-          <!--TODO: alter this <animated-number> -->
-          <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
-        </div>
-        <div class="project-name">
-          <p>TEMP</p>
-        </div>
-      </div>
-
-      <!--TODO: finish this div -->
-      <div class="items">
-        <div ref="" class="icon-wrapper">
-          <!--TODO: Implement <animated-number> tag -->
-        </div>
-        <div class="project-name">
-          <p>TEMP</p>
-        </div>
-      </div>
-
-      <!--TODO: finish this div -->
-      <div class="items">
-        <div ref="" class="icon-wrapper">
-          <!--TODO: Implement <animated-number> tag -->
-        </div>
-        <div class="project-name">
-          <p>TEMP</p>
-        </div>
-      </div>
     </div>
 
     <h2>Comparison with previous course executions</h2>
@@ -98,15 +38,7 @@
     <div v-if="teacherDashboard != null" class="stats-container">
       <!-- Div to display the statistics about quizzes -->
       <div class="bar-chart">
-        <Bar :chartData="data" :chartOptions="options" />
-      </div>
-      <div class="bar-chart">
-        <!-- TODO: Change bar content (used as a placeholder to test the positions of the bar charts)-->
-        <Bar :chartData="data" :chartOptions="options" />
-      </div>
-      <div class="bar-chart">
-        <!-- TODO: Change bar content (used as a placeholder to test the positions of the bar charts)-->
-        <Bar :chartData="data" :chartOptions="options" />
+        <Bar :chartData="quizzesData" :chartOptions="options" />
       </div>
     </div>
   </div>
@@ -143,20 +75,18 @@ ChartJS.register(
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
-  data: Object = {};
+  quizzesData: Object = {};
   options: Object = {};
 
   async created() {
     await this.$store.dispatch('loading');
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
-
       this.options = {
         responsive: true,
         maintainAspectRatio: false,
       };
-      // TODO: trocar valores fixos por valores dinâmicos
-      this.data = {
+      this.quizzesData = {
         labels: [
           this.teacherDashboard?.executionYears[2]
             ? this.teacherDashboard?.executionYears[2]
