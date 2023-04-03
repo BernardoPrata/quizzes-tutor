@@ -94,8 +94,9 @@ export default class TeacherStatsView extends Vue {
           this.teacherDashboard?.executionYears[1]
             ? this.teacherDashboard?.executionYears[1]
             : ' ',
-          this.teacherDashboard?.executionYears[0] + ' (current)',
-        ],
+          this.teacherDashboard?.executionYears[0] ? this.teacherDashboard.executionYears[0] + ' (current)' : 'current',
+
+    ],
         datasets: [
           {
             label: 'Quizzes: Total Available',
