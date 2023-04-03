@@ -193,6 +193,18 @@ export default class RemoteServices {
           throw Error(await this.errorMessage(error));
         });
   }
+  static async updateTeacherDashboard(dashboardId: number): Promise<void> {
+    return httpClient
+        .get(`/teachers/dashboards/${dashboardId}/update`)
+        .then(() => {
+          // Handle successful response (if needed)
+        })
+        .catch(async (error) => {
+          throw Error(await this.errorMessage(error));
+        });
+  }
+
+
 
   static async getUserDashboard(): Promise<StudentDashboard> {
     return httpClient

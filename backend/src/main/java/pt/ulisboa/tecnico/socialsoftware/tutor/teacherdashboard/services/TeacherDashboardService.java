@@ -53,9 +53,13 @@ public class TeacherDashboardService {
                 .filter(dashboard -> dashboard.getCourseExecution().getId().equals(courseExecutionId))
                 .findAny();
 
-        return dashboardOptional.
-                map(TeacherDashboardDto::new).
-                orElseGet(() -> createAndReturnTeacherDashboardDto(courseExecution, teacher));
+        if (dashboardOptional.isPresent()) {
+            TeacherDashboard dashboard = dashboardOptional.get();
+            dashboard.update();
+            return new TeacherDashboardDto(dashboard);
+        } else {
+            return createTeacherDashboard(courseExecutionId, teacherId);
+        }
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)

@@ -22,10 +22,10 @@ export default class TeacherDashboard {
       this.averageSolvedQuizes = jsonObj.averageSolvedQuizes;
       this.executionYears = jsonObj.executionYears;
       // TODO: Remove later, hard coded for tests
-      this.executionYears = [2021];
-      this.numberOfQuizzes = [12];
-      this.uniqueQuizzesSolved = [5];
-      this.averageSolvedQuizes = [13];
+      //this.executionYears = [2021];
+      //this.numberOfQuizzes = [12];
+      //this.uniqueQuizzesSolved = [5];
+      //this.averageSolvedQuuizes = [13];
     }
   }
 }
