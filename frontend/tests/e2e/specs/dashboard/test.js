@@ -6,69 +6,46 @@ describe('Statistics testing', () => {
   beforeEach(() => {
     cy.deleteQuestionsAndAnswers();
     cy.cleanTestCourses();
-    cy.demoAdminLogin();
-    cy.get('[data-cy="administrationMenuButton"]').click();
-    cy.get('[data-cy="manageCoursesMenuButton"]').click({force: true});
   });
+
 
   it('creates two course executions and two quizzes for each one of them', () => {
-    // Create "Year 2020/2021" course execution and a demo teacher
-    cy.createCourseExecution('Demo Course', 'TEST- Year 2020/2021', 'Spring Semester');
-    cy.addUserThroughForm('TEST- Year 2020/2021', teacherName, teacherUsername, teacherEmail, teacherRole);
-    cy.closeUserCreationDialog();
-
-    // Create "Year 2021/2022" course execution and a demo teacher
-    cy.createCourseExecution('Demo Course', 'TEST- Year 2021/2022', 'Spring Semester');
-    cy.addUserThroughForm('TEST- Year 2021/2022', teacherName, teacherUsername, teacherEmail, teacherRole);
-    cy.closeUserCreationDialog();
-    cy.logout()
-
-    // Create two quizzes for "Year 2021/2022"
+    // Create demo teacher
     cy.demoTeacherLogin();
-    cy.changeCourse('TEST- Year 2020/2021');
+    cy.logout();
 
-    cy.createQuestion(
-      'Question 1',
-      'Question',
-      'Option',
-      'Option',
-      'ChooseThisWrong',
-      'Correct'
-    );
-    cy.createQuestion(
-      'Question 2',
-      'Question',
-      'Option',
-      'Option',
-      'ChooseThisWrong',
-      'Correct'
-    );
-    cy.createQuizzWith2Questions('Quiz 1 - Year 2020/2021', 'Question 1', 'Question 2');
+    // Create course executions
+    for (let year = 2020; year <= 2021; year++) {
+      const academicYear = `Year ${year}/${year + 1}`;
 
-    cy.changeCourse('TEST- Year 2021/2022');
-    cy.createQuestion(
-      'Question 3',
-      'Question',
-      'Option',
-      'Option',
-      'ChooseThisWrong',
-      'Correct'
-    );
-    cy.createQuestion(
-      'Question 4',
-      'Question',
-      'Option',
-      'Option',
-      'ChooseThisWrong',
-      'Correct'
-    );
-    cy.createQuizzWith2Questions('Quiz 1 - Year 2021/2022', 'Question 3', 'Question 4');
+      // Create course execution and demo teacher
+      cy.createCourseExecutionOnDemoCourse(`TEST- ${academicYear}`);
+      cy.changeDemoTeacherCourseExecutionMatchingAcademicTerm(`TEST- ${academicYear}`);
+    }
+    // Create quizzes
+    cy.demoTeacherLogin();
+    let j=0;
+    for (let year = 2020; year <= 2021; year++) {
+      const academicYear = `Year ${year}/${year + 1}`;
+      cy.selectCourseByTerm(`TEST- ${academicYear}`);
+      cy.createQuestion(`Question ${j}`, 'Question', 'Option', 'Option', 'ChooseThisWrong', 'Correct');
+      cy.createQuestion(`Question ${j+1}`, 'Question', 'Option', 'Option', 'ChooseThisWrong', 'Correct');
+      cy.createQuizzWith2Questions(`Quiz ${j} - ${academicYear}`, `Question ${j}`, `Question ${j+1}`);
+      j+=2;
 
+    }
+    //cy.selectCourseByTerm('TEST- Year 2022/2023');
+    //cy.get('[data-cy="dashboardMenuButton"]').click();
+    // TODO: add everything prior to do before each test
+    // TODO: check current dashboard and compare current year presented and graphs
+
+    // TODO: delete beforeEach and afterEach only needs to delete created quizzes and course (not all)
     cy.logout();
   });
-
+  //after each
   afterEach(() => {
     cy.deleteQuestionsAndAnswers();
     cy.cleanTestCourses();
   });
+
 });
