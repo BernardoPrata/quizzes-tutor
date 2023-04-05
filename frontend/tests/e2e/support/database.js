@@ -211,3 +211,26 @@ Cypress.Commands.add('getDemoCourseExecutionId', () => {
     credentials: credentials,
   });
 });
+Cypress.Commands.add('createCourseExecutionOnDemoCourse', (academicTerm) => {
+    cy.task('queryDatabase', {
+        query: `INSERT into course_executions (id, academic_term, acronym, end_date, status, type, course_id)
+             SELECT id+1, '${academicTerm}', acronym, end_date, status, type, course_id FROM course_executions
+               WHERE acronym = 'DemoCourse'
+               AND id=(
+                 SELECT max(id) FROM course_executions
+               )`,
+    });
+});
+
+Cypress.Commands.add(
+    'changeDemoTeacherCourseExecutionMatchingAcademicTerm',
+    (academicTerm) => {
+        cy.task('queryDatabase', {
+            query: `INSERT INTO users_course_executions (users_id, course_executions_id)
+                 SELECT
+                     (SELECT id FROM users WHERE name = 'Demo Teacher'),
+                     (SELECT id FROM course_executions WHERE academic_term = '${academicTerm}' limit 1  )
+                   )`,
+        });
+    }
+);

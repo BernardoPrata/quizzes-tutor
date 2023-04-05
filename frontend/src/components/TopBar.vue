@@ -246,6 +246,7 @@
 
         <v-btn
           v-if="isLoggedIn && moreThanOneCourse"
+          data-cy="multipleCoursesMenuButton"
           active-class="no-active"
           dark
           text

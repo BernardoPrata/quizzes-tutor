@@ -557,3 +557,8 @@ Cypress.Commands.add('deleteQuestion', (questionTitle) => {
     .find('[data-cy="deleteQuestionButton"]')
     .click();
 });
+
+Cypress.Commands.add('changeCourse',(courseName) => {
+            cy.get('[data-cy="multipleCoursesMenuButton"]').click();
+            cy.contains(courseName).click();
+});
