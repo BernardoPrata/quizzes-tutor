@@ -559,6 +559,15 @@ Cypress.Commands.add('deleteQuestion', (questionTitle) => {
 });
 
 Cypress.Commands.add('changeCourse',(courseName) => {
-            cy.get('[data-cy="multipleCoursesMenuButton"]').click();
-            cy.contains(courseName).click();
+    cy.get('[data-cy="multipleCoursesMenuButton"]').click();
+    cy.contains(courseName).click();
 });
+
+Cypress.Commands.add('selectCourseByTerm', (term) => {
+    cy.get('[data-cy="multipleCoursesMenuButton"]').click();
+    cy.get('.container')
+        .contains('.title', term)
+        .parent()
+        .find('.v-list-item')
+        .click()
+})
