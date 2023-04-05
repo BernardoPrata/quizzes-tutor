@@ -30,10 +30,10 @@ public class TeacherDashboardController {
         return teacherDashboardService.getTeacherDashboard(courseExecutionId, teacherId);
     }
 
-    @GetMapping("/teachers/dashboards/{dashboardId}/update")
+    @GetMapping("/teachers/dashboards/{teacherDashboardId}/update")
     @PreAuthorize("hasRole('ROLE_TEACHER') and hasPermission(#teacherDashboardId, 'TEACHERDASHBOARD.ACCESS')")
-    public void updateTeacherDashboard(Principal principal, @PathVariable int dashboardId) {
-        teacherDashboardService.updateTeacherDashboard(dashboardId);
+    public void updateTeacherDashboard(Principal principal, @PathVariable int teacherDashboardId) {
+        teacherDashboardService.updateTeacherDashboard(teacherDashboardId);
     }
 
     @DeleteMapping("/teachers/dashboards/{teacherDashboardId}/remove")
