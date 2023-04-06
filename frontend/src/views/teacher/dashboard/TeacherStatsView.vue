@@ -38,7 +38,7 @@
     <div v-if="teacherDashboard != null" class="stats-container">
       <!-- Div to display the statistics about quizzes -->
       <div class="bar-chart">
-        <Bar :chartData="quizzesData" :chartOptions="options" />
+        <bar-chart :data="quizzesData" />
       </div>
     </div>
   </div>
@@ -48,6 +48,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
+import BarChart from '@/components/charts/BarChart.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
 import {
   Chart as ChartJS,
@@ -59,6 +60,8 @@ import {
   LinearScale,
 } from 'chart.js';
 import { Bar } from 'vue-chartjs/legacy';
+import {types} from "sass";
+import String = types.String;
 
 ChartJS.register(
   CategoryScale,
@@ -70,7 +73,7 @@ ChartJS.register(
 );
 
 @Component({
-  components: { AnimatedNumber, Bar },
+  components: { BarChart, AnimatedNumber, Bar },
 })
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
@@ -82,55 +85,54 @@ export default class TeacherStatsView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
-      this.options = {
-        responsive: true,
-        maintainAspectRatio: false,
-      };
-      this.quizzesData = {
-        labels: [
-          this.teacherDashboard?.executionYears[2]
-            ? this.teacherDashboard?.executionYears[2]
-            : ' ',
-          this.teacherDashboard?.executionYears[1]
-            ? this.teacherDashboard?.executionYears[1]
-            : ' ',
-          this.teacherDashboard?.executionYears[0] ? this.teacherDashboard.executionYears[0] + ' (current)' : 'current',
-
-    ],
-        datasets: [
-          {
-            label: 'Quizzes: Total Available',
-            backgroundColor: '#b14434',
-            data: [
-              this.teacherDashboard?.numberOfQuizzes[2],
-              this.teacherDashboard?.numberOfQuizzes[1],
-              this.teacherDashboard?.numberOfQuizzes[0],
-            ],
-          },
-          {
-            label: 'Quizzes: Solved (Unique)',
-            backgroundColor: '#437eb4',
-            data: [
-              this.teacherDashboard?.uniqueQuizzesSolved[2],
-              this.teacherDashboard?.uniqueQuizzesSolved[1],
-              this.teacherDashboard?.uniqueQuizzesSolved[0],
-            ],
-          },
-          {
-            label: 'Quizzes: Solved (Unique, Average per student)',
-            backgroundColor: '#58b99d',
-            data: [
-              this.teacherDashboard?.averageSolvedQuizes[2],
-              this.teacherDashboard?.averageSolvedQuizes[1],
-              this.teacherDashboard?.averageSolvedQuizes[0],
-            ],
-          },
-        ],
-      };
+      this.quizzesData = this.extractQuizzesData(this.teacherDashboard);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+  extractQuizzesData(tDb: TeacherDashboard) {
+    let quizzesData: { labels: object; datasets: object } = {
+      labels: [],
+      datasets: [],
+    };
+
+    quizzesData.labels = [
+      tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
+      tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
+      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+    ];
+    quizzesData.datasets = [
+      {
+        label: 'Quizzes: Total Available',
+        backgroundColor: '#b14434',
+        data: [
+          tDb?.numberOfQuizzes[2],
+          tDb?.numberOfQuizzes[1],
+          tDb?.numberOfQuizzes[0],
+        ],
+      },
+      {
+        label: 'Quizzes: Solved (Unique)',
+        backgroundColor: '#437eb4',
+        data: [
+          tDb?.uniqueQuizzesSolved[2],
+          tDb?.uniqueQuizzesSolved[1],
+          tDb?.uniqueQuizzesSolved[0],
+        ],
+      },
+      {
+        label: 'Quizzes: Solved (Unique, Average per student)',
+        backgroundColor: '#58b99d',
+        data: [
+          tDb?.averageSolvedQuizes[2],
+          tDb?.averageSolvedQuizes[1],
+          tDb?.averageSolvedQuizes[0],
+        ],
+      },
+    ];
+    return quizzesData;
   }
 }
 </script>
