@@ -242,3 +242,14 @@ Cypress.Commands.add(
     }
 );
 
+Cypress.Commands.add('cleanTestCoursesByAcademicTerm', () => {
+  dbCommand(`
+    delete from quiz_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from question_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from student_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from teacher_dashboard where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from users_course_executions where course_executions_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from course_executions where academic_term like 'TEST-%';
+    `);
+});
+

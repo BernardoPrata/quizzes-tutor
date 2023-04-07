@@ -466,6 +466,44 @@ Cypress.Commands.add(
     cy.get('[data-cy="saveQuizButton"]').click();
   }
 );
+Cypress.Commands.add(
+    'createOtherQuizzWith2Questions',
+    (quizTitle, questionTitle, questionTitle2) => {
+        cy.get('[data-cy="newQuizButton"]').click();
+        cy.get('[data-cy="openQueryButton"]').click();
+        cy.get('[data-cy="submitQueryButton"]').click();
+        cy.get('[data-cy="quizTitleTextArea"]').type(quizTitle);
+
+        cy.get('#availableDateInput-input').click();
+        cy.get(
+            '.datetimepicker > .datepicker > .datepicker-buttons-container > .datepicker-button > .datepicker-button-content'
+        )
+            .first()
+            .click();
+        cy.get('[data-cy="searchField"]').clear().type(questionTitle);
+        cy.contains(questionTitle)
+            .parent()
+            .should('have.length', 1)
+            .parent()
+            .children()
+            .should('have.length', 3)
+            .find('[data-cy="addToQuizButton"]')
+            .click();
+
+        cy.get('[data-cy="searchField"]').clear();
+        cy.get('[data-cy="searchField"]').type(questionTitle2);
+        cy.contains(questionTitle2)
+            .parent()
+            .should('have.length', 1)
+            .parent()
+            .children()
+            .should('have.length', 3)
+            .find('[data-cy="addToQuizButton"]')
+            .click();
+
+        cy.get('[data-cy="saveQuizButton"]').click();
+    }
+);
 
 Cypress.Commands.add(
   'solveQuizz',

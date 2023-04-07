@@ -255,6 +255,7 @@
           <v-btn
             color="primary"
             dark
+            data-cy="openQueryButton"
             v-on:click="showQueryForm = !showQueryForm"
           >
             {{ !showQueryForm ? 'Open Query Form' : 'Close Query Form' }}
