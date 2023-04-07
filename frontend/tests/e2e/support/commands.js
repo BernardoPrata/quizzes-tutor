@@ -533,6 +533,9 @@ Cypress.Commands.add(
   }
 );
 
+
+
+
 Cypress.Commands.add('createDiscussion', (discussionContent) => {
   cy.get('[data-cy="quizzesStudentMenuButton"]').click();
   cy.contains('Solved').click();
@@ -609,3 +612,15 @@ Cypress.Commands.add('selectCourseByTerm', (term) => {
         .find('.v-list-item')
         .click()
 })
+
+
+// create command with two arguments
+Cypress.Commands.add('checkStats', (statsName, statsValue) => {
+    cy.get(`[data-cy="${statsName}"]`).should(($element) => {
+        // Extract the value from the element
+        const numberOfQuizzes = Number($element.text());
+
+        // Assert that the value is equal to 3
+        expect(numberOfQuizzes).to.equal(statsValue);
+    });
+});
