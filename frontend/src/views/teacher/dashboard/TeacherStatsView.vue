@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <h2>Statistics for this course execution</h2>
-    <div v-if="teacherDashboard != null" class="stats-container">
+    <div v-if="teacherDashboard != null" class="stats-container" >
       <!-- Div to display the number of quizzes -->
       <div class="items">
-        <div ref="totalQuizzes" class="icon-wrapper">
+        <div ref="totalQuizzes" class="icon-wrapper" data-cy="totalQuizzes">
           <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
         </div>
         <div class="project-name">
@@ -14,7 +14,7 @@
 
       <!-- Div to display the number of quizzes solved (unique) -->
       <div class="items">
-        <div ref="uniqueQuizzesSolved" class="icon-wrapper">
+        <div ref="uniqueQuizzesSolved" class="icon-wrapper" data-cy="uniqueQuizzesSolved">
           <animated-number :number="teacherDashboard.uniqueQuizzesSolved[0]" />
         </div>
         <div class="project-name">
@@ -24,7 +24,7 @@
 
       <!-- Div to display the number of average quizzes solved -->
       <div class="items">
-        <div ref="averageSolvedQuizes" class="icon-wrapper">
+        <div ref="averageSolvedQuizes" class="icon-wrapper" data-cy="averageSolvedQuizes">
           <animated-number :number="teacherDashboard.averageSolvedQuizes[0]" />
         </div>
         <div class="project-name">

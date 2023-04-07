@@ -47,10 +47,22 @@ describe('Statistics testing', () => {
 
     }
 
+    cy.selectCourseByTerm('TEST- Year 2022/2023');
+    cy.get('[data-cy="dashboardMenuButton"]').click();
+
+    // check current stats
+    j=1;
+    for (let year = 2020; year <= 2022; year++) {
+      cy.checkStats('totalQuizzes', j++);
+      cy.checkStats('uniqueQuizzesSolved',0);
+      cy.checkStats('averageSolvedQuizes',0);
+    }
 
 
-    //cy.selectCourseByTerm('TEST- Year 2022/2023');
-    //cy.get('[data-cy="dashboardMenuButton"]').click();
+
+
+      // Test current course stats
+
     // TODO: add everything prior to do before each test
     // TODO: check current dashboard and compare current year presented and graphs
 
