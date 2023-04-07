@@ -84,7 +84,7 @@ import {
   LinearScale,
 } from 'chart.js';
 import { Bar } from 'vue-chartjs/legacy';
-import {types} from "sass";
+import {types} from 'sass';
 import String = types.String;
 
 ChartJS.register(
