@@ -27,22 +27,56 @@
         </div>
       </div>
     </div>
-</div>
+
+    <h2>Comparison with previous course executions</h2>
+
+    <div v-if="teacherDashboard != null" class="stats-container">
+      <!-- Div to display the students statistics about students -->
+      <div class="bar-chart">
+        <bar-chart :data="studentsData" /> 
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
+import BarChart from '@/components/charts/BarChart.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js';
+import { Bar } from 'vue-chartjs/legacy';
+import {types} from 'sass';
+import String = types.String;
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 @Component({
-  components: { AnimatedNumber },
+  components: { BarChart, AnimatedNumber, Bar },
 })
 
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
+  studentsData: Object = {};
+  options: Object = {};
+
 
   async created() {
     await this.$store.dispatch('loading');
@@ -55,6 +89,48 @@ export default class TeacherStatsView extends Vue {
   }
 }
 
+extractStudentsData(tDb: TeacherDashboard) { 
+  let studentsData: { labels: object; datasets: object } = {
+    labels: [],
+    datasets: [],
+  };
+
+  studentsData.labels = [
+    tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
+    tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
+    tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+  ];
+  studentsData.datasets = [
+    {
+      label: 'Total Number of Students',
+      backgroundColor: '#b14434',
+      data: [
+        tDb?.numberOfStudents[2],
+        tDb?.numberOfStudents[1],
+        tDb?.numberOfStudents[0],
+      ],
+    },
+    {
+      label: 'Students who Solved >= 75% of Questions',
+      backgroundColor: '#437eb4',
+      data: [
+        tDb?.numStudentsOver75perc[2],
+        tDb?.numStudentsOver75perc[1],
+        tDb?.numStudentsOver75perc[0],
+      ], 
+    },
+    {
+      label: 'Students who Solved >= 3 Quizzes',
+      backgroundColor: '#58b99d',
+      data: [
+        tDb?.numStudentsOver3quizes[2],
+        tDb?.numStudentsOver3quizes[1],
+        tDb?.numStudentsOver3quizes[0],
+      ],
+    },
+  ];
+  return studentsData;
+}
 </script>
 
 <style lang="scss" scoped>
