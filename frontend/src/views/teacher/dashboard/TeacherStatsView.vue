@@ -87,7 +87,7 @@
       </div>
     </div>
   </div>
-</template>
+</template>  //npm i -D @types/chart.js
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -186,7 +186,6 @@ export default class TeacherStatsView extends Vue {
       labels: [],
       datasets: [],
     };
-
     studentsData.labels = [
       tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
       tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
