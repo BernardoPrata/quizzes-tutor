@@ -1,6 +1,6 @@
 export default class TeacherDashboard {
   id!: number;
-  numberOfStudents!: number;
+  numberOfStudents!: number[];
 
   numStudentsOver3quizes!: number[];
 
@@ -27,7 +27,7 @@ export default class TeacherDashboard {
     }
 
     this.executionYears = [2021]
-    this.numberOfStudents = 15
+    this.numberOfStudents = [15]
     this.numStudentsOver3quizes = [5]
     this.numStudentsOver75perc = [13]
   }
