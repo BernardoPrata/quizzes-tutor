@@ -1,7 +1,9 @@
 export default class TeacherDashboard {
   id!: number;
-  numberOfStudents!: number[]; 
+  numberOfStudents!: number;
+
   numStudentsOver3quizes!: number[];
+
   numStudentsOver75perc!: number[];
 
   numberOfQuizzes!: number[];
@@ -11,6 +13,7 @@ export default class TeacherDashboard {
   averageSolvedQuizes!: number[];
 
   executionYears!: number[];
+
   constructor(jsonObj?: TeacherDashboard) {
     if (jsonObj) {
       this.id = jsonObj.id;
@@ -22,5 +25,10 @@ export default class TeacherDashboard {
       this.averageSolvedQuizes = jsonObj.averageSolvedQuizes;
       this.executionYears = jsonObj.executionYears;
     }
+
+    this.executionYears = [2021]
+    this.numberOfStudents = 15
+    this.numStudentsOver3quizes = [5]
+    this.numStudentsOver75perc = [13]
   }
 }
