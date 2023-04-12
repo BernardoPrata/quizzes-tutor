@@ -37,7 +37,7 @@
       </div>
     </div>
   </div>
-</template>
+</template>  //npm i -D @types/chart.js
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -87,49 +87,49 @@ export default class TeacherStatsView extends Vue {
     }
     await this.$store.dispatch('clearLoading');
   }
-}
-
-extractStudentsData(tDb: TeacherDashboard) { 
-  let studentsData: { labels: object; datasets: object } = {
-    labels: [],
-    datasets: [],
-  };
-
-  studentsData.labels = [
-    tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
-    tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
-    tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
-  ];
-  studentsData.datasets = [
-    {
-      label: 'Total Number of Students',
-      backgroundColor: '#b14434',
-      data: [
-        tDb?.numberOfStudents[2],
-        tDb?.numberOfStudents[1],
-        tDb?.numberOfStudents[0],
-      ],
-    },
-    {
-      label: 'Students who Solved >= 75% of Questions',
-      backgroundColor: '#437eb4',
-      data: [
-        tDb?.numStudentsOver75perc[2],
-        tDb?.numStudentsOver75perc[1],
-        tDb?.numStudentsOver75perc[0],
-      ], 
-    },
-    {
-      label: 'Students who Solved >= 3 Quizzes',
-      backgroundColor: '#58b99d',
-      data: [
-        tDb?.numStudentsOver3quizes[2],
-        tDb?.numStudentsOver3quizes[1],
-        tDb?.numStudentsOver3quizes[0],
-      ],
-    },
-  ];
-  return studentsData;
+  
+  extractStudentsData(tDb: TeacherDashboard) { 
+    let studentsData: { labels: object; datasets: object } = {
+      labels: [],
+      datasets: [],
+    };
+  
+    studentsData.labels = [
+      tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
+      tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
+      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+    ];
+    studentsData.datasets = [
+      {
+        label: 'Total Number of Students',
+        backgroundColor: '#b14434',
+        data: [
+          tDb?.numberOfStudents[2],
+          tDb?.numberOfStudents[1],
+          tDb?.numberOfStudents[0],
+        ],
+      },
+      {
+        label: 'Students who Solved >= 75% of Questions',
+        backgroundColor: '#437eb4',
+        data: [
+          tDb?.numStudentsOver75perc[2],
+          tDb?.numStudentsOver75perc[1],
+          tDb?.numStudentsOver75perc[0],
+        ], 
+      },
+      {
+        label: 'Students who Solved >= 3 Quizzes',
+        backgroundColor: '#58b99d',
+        data: [
+          tDb?.numStudentsOver3quizes[2],
+          tDb?.numStudentsOver3quizes[1],
+          tDb?.numStudentsOver3quizes[0],
+        ],
+      },
+    ];
+    return studentsData;
+  }
 }
 </script>
 
