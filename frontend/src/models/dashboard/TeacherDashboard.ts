@@ -1,8 +1,8 @@
 export default class TeacherDashboard {
   id!: number;
-  numberOfStudents!: number;
-  numStudentsOver3quizes!: number;
-  numStudentsOver75perc!: number;
+  numberOfStudents!: number[]; 
+  numStudentsOver3quizes!: number[];
+  numStudentsOver75perc!: number[];
 
   numberOfQuizzes!: number[];
 
