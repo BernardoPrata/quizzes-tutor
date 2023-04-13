@@ -18,5 +18,10 @@ export default class TeacherDashboard {
       this.averageSolvedCorrectQuestions = jsonObj.averageSolvedCorrectQuestions;
       this.executionYears = jsonObj.executionYears;
     }
+
+    this.executionYears = [2021, 2020, 2019];
+    this.numberOfQuestions = [600, 500, 400];
+    this.uniqueQuestionsSolved = [400, 250, 300];
+    this.averageSolvedCorrectQuestions = [300, 150, 100];
   }
 }

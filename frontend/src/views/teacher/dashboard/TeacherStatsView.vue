@@ -2,6 +2,17 @@
   <div class="container">
     <h2>Statistics for this course execution</h2>
     <div v-if="teacherDashboard != null" class="stats-container">
+
+      <!-- Div to display the number of students -->
+      <div class="items">
+        <div ref="totalStudents" class="icon-wrapper" data-cy="totalStudents">
+          <animated-number :number="teacherDashboard.numberOfStudents[0]" />
+        </div>
+        <div class="project-name">
+          <p>Number of Students</p>
+        </div>
+      </div>
+
       <div class="items">
         <div ref="totalQuestions" class="icon-wrapper" data-cy="totalQuestions">
           <animated-number :number="teacherDashboard.numberOfQuestions[0]" />
@@ -41,7 +52,9 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
+import BarChart from '@/components/charts/BarChart.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
+
 import {
   Chart as ChartJS,
     Title,
@@ -51,7 +64,10 @@ import {
     CategoryScale,
     LinearScale,
 } from 'chart.js';
-import { Bar } from 'vue-chartjs';
+//import { Bar } from 'vue-chartjs';
+import { Bar } from 'vue-chartjs/legacy';
+import {types} from 'sass';
+import String = types.String;
 
 
 ChartJS.register(
@@ -65,7 +81,7 @@ ChartJS.register(
 
 
 @Component({
-  components: { AnimatedNumber, Bar },
+  components: { BarChart, AnimatedNumber, Bar },
 })
 
 export default class TeacherStatsView extends Vue {
@@ -101,7 +117,7 @@ export default class TeacherStatsView extends Vue {
     questionsData.datasets = [
       {
         label: 'Questions: Total Available',
-        backgroundColor: '',
+        backgroundColor: '#b14434',
         data: [
           tDb?.numberOfQuestions[2],
           tDb?.numberOfQuestions[1],
@@ -110,7 +126,7 @@ export default class TeacherStatsView extends Vue {
       },
       {
         label: 'Questions: Solved (Unique)',
-        backgroundColor: '',
+        backgroundColor: '#437eb4',
         data: [
           tDb?.uniqueQuestionsSolved[2],
           tDb?.uniqueQuestionsSolved[1],
@@ -119,7 +135,7 @@ export default class TeacherStatsView extends Vue {
       },
       {
         label: 'Questions: Correctly Solved (Unique, Average Per Student)',
-        backgroundColor: '',
+        backgroundColor: '#58b99d',
         data: [
           tDb?.averageSolvedCorrectQuestions[2],
           tDb?.averageSolvedCorrectQuestions[1],
