@@ -61,6 +61,7 @@
           <p>Number of Quizzes Solved (Unique, Average per student)</p>
         </div>
       </div>
+    </div>
 
     <h2>Comparison with previous course executions</h2>
 
@@ -68,6 +69,8 @@
       <!-- Div to display the statistics about quizzes -->
       <div class="bar-chart">
         <bar-chart :data="quizzesData" />
+      </div>
+      <div class="bar-chart">
         <bar-chart :data="studentsData" /> 
       </div>
     </div>
@@ -133,7 +136,7 @@ export default class TeacherStatsView extends Vue {
     quizzesData.labels = [
       tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
       tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
-      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+      tDb?.executionYears[0] ? tDb?.executionYears[0] + ' (current)' : 'current',
     ];
     quizzesData.datasets = [
       {
