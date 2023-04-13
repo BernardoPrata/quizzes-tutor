@@ -12,6 +12,12 @@ export default class TeacherDashboard {
 
   averageSolvedQuizes!: number[];
 
+  numberOfQuestions!: number[];
+
+  uniqueQuestionsSolved!: number[];
+
+  averageSolvedCorrectQuestions!: number[];
+
   executionYears!: number[];
 
   constructor(jsonObj?: TeacherDashboard) {
@@ -23,6 +29,9 @@ export default class TeacherDashboard {
       this.numberOfQuizzes = jsonObj.numberOfQuizzes;
       this.uniqueQuizzesSolved = jsonObj.uniqueQuizzesSolved;
       this.averageSolvedQuizes = jsonObj.averageSolvedQuizes;
+      this.numberOfQuestions = jsonObj.numberOfQuestions;
+      this.uniqueQuestionsSolved = jsonObj.uniqueQuestionsSolved;
+      this.averageSolvedCorrectQuestions = jsonObj.averageSolvedCorrectQuestions;
       this.executionYears = jsonObj.executionYears;
     }
   }

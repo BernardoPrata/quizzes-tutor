@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2>Statistics for this course execution</h2>
-    <div v-if="teacherDashboard != null" class="stats-container" >
+    <div v-if="teacherDashboard != null" class="stats-container">
       <!-- Div to display the number of students -->
       <div class="items">
         <div ref="totalStudents" class="icon-wrapper" data-cy="totalStudents">
@@ -61,6 +61,32 @@
           <p>Number of Quizzes Solved (Unique, Average per student)</p>
         </div>
       </div>
+        <div class="items">
+            <div ref="totalQuestions" class="icon-wrapper" data-cy="totalQuestions">
+                <animated-number :number="teacherDashboard.numberOfQuestions[0]" />
+            </div>
+            <div class="project-name">
+                <p>Number of Questions</p>
+            </div>
+        </div>
+
+        <div class="items">
+            <div ref="uniqueQuestionsSolved" class="icon-wrapper" data-cy="uniqueQuestionsSolved">
+                <animated-number :number="teacherDashboard.uniqueQuestionsSolved[0]" />
+            </div>
+            <div class="project-name">
+                <p>Number of Questions Solved (Unique)</p>
+            </div>
+        </div>
+
+        <div class="items">
+            <div ref="averageSolvedCorrectQuestions" class="icon-wrapper" data-cy="averageSolvedCorrectQuestions">
+                <animated-number :number="teacherDashboard.averageSolvedCorrectQuestions[0]" />
+            </div>
+            <div class="project-name">
+                <p>Number of Questions Correctly Solved (Unique, Average Per Student)</p>
+            </div>
+        </div>
     </div>
 
     <h2>Comparison with previous course executions</h2>
@@ -73,6 +99,9 @@
       <div class="bar-chart">
         <bar-chart :data="studentsData" /> 
       </div>
+        <div class="bar-chart">
+            <bar-chart :data="questionsData" />
+        </div>
     </div>
   </div>
 </template>
@@ -113,6 +142,7 @@ export default class TeacherStatsView extends Vue {
   teacherDashboard: TeacherDashboard | null = null;
   quizzesData: Object = {};
   studentsData: Object = {};
+  questionsData: Object = {};
   options: Object = {};
 
   async created() {
@@ -121,6 +151,7 @@ export default class TeacherStatsView extends Vue {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
       this.quizzesData = this.extractQuizzesData(this.teacherDashboard);
       this.studentsData = this.extractStudentsData(this.teacherDashboard);
+      this.questionsData = this.extractQuestionsData(this.teacherDashboard);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -211,6 +242,48 @@ export default class TeacherStatsView extends Vue {
     ];
     return studentsData;
   }
+    extractQuestionsData(tDb: TeacherDashboard) {
+        let questionsData: { labels: object, datasets: object } = {
+            labels: [],
+            datasets: [],
+        };
+
+        questionsData.labels = [
+            tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
+            tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
+            tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+        ];
+        questionsData.datasets = [
+            {
+                label: 'Questions: Total Available',
+                backgroundColor: '#b14434',
+                data: [
+                    tDb?.numberOfQuestions[2],
+                    tDb?.numberOfQuestions[1],
+                    tDb?.numberOfQuestions[0],
+                ],
+            },
+            {
+                label: 'Questions: Solved (Unique)',
+                backgroundColor: '#437eb4',
+                data: [
+                    tDb?.uniqueQuestionsSolved[2],
+                    tDb?.uniqueQuestionsSolved[1],
+                    tDb?.uniqueQuestionsSolved[0],
+                ],
+            },
+            {
+                label: 'Questions: Correctly Solved (Unique, Average Per Student)',
+                backgroundColor: '#58b99d',
+                data: [
+                    tDb?.averageSolvedCorrectQuestions[2],
+                    tDb?.averageSolvedCorrectQuestions[1],
+                    tDb?.averageSolvedCorrectQuestions[0],
+                ],
+            },
+        ];
+        return questionsData;
+    }
 }
 </script>
 
