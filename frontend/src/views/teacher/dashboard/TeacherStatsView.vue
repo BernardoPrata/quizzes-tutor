@@ -2,7 +2,6 @@
   <div class="container">
     <h2>Statistics for this course execution</h2>
     <div v-if="teacherDashboard != null" class="stats-container">
-
       <!-- Div to display the number of students -->
       <div class="items">
         <div ref="totalStudents" class="icon-wrapper" data-cy="totalStudents">
@@ -20,14 +19,18 @@
         <div class="project-name">
           <p>Number of Questions</p>
         </div>
+      </div>
 
+      <div class="items">
         <div ref="uniqueQuestionsSolved" class="icon-wrapper" data-cy="uniqueQuestionsSolved">
           <animated-number :number="teacherDashboard.uniqueQuestionsSolved[0]" />
         </div>
         <div class="project-name">
           <p>Number of Questions Solved (Unique)</p>
         </div>
+      </div>
 
+      <div class="items">
         <div ref="averageSolvedCorrectQuestions" class="icon-wrapper" data-cy="averageSolvedCorrectQuestions">
           <animated-number :number="teacherDashboard.averageSolvedCorrectQuestions[0]" />
         </div>
@@ -36,7 +39,6 @@
         </div>
       </div>
     </div>
-
     <h2>Comparison with previous course executions</h2>
 
     <div v-if="teacherDashboard != null" class="stats container">
@@ -45,7 +47,7 @@
         <bar-chart :data="questionsData" />
       </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -54,36 +56,31 @@ import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import BarChart from '@/components/charts/BarChart.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
-
 import {
   Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
 } from 'chart.js';
-//import { Bar } from 'vue-chartjs';
 import { Bar } from 'vue-chartjs/legacy';
 import {types} from 'sass';
 import String = types.String;
 
-
 ChartJS.register(
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
 );
-
 
 @Component({
   components: { BarChart, AnimatedNumber, Bar },
 })
-
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
@@ -101,7 +98,6 @@ export default class TeacherStatsView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-
   extractQuestionsData(tDb: TeacherDashboard) {
     let questionsData: { labels: object, datasets: object } = {
       labels: [],
@@ -111,9 +107,8 @@ export default class TeacherStatsView extends Vue {
     questionsData.labels = [
       tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
       tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
-      tDb?.executionYears[0] ? tDb?.executionYears[0] + ' (current)' : 'current',
+      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
     ];
-
     questionsData.datasets = [
       {
         label: 'Questions: Total Available',
@@ -146,7 +141,6 @@ export default class TeacherStatsView extends Vue {
     return questionsData;
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -170,8 +164,10 @@ export default class TeacherStatsView extends Vue {
   }
 
   .bar-chart {
-    background-color: rgba(255, 255, 255, 0.90);
+    background-color: rgba(255, 255, 255, 0.9);
     height: 400px;
+    width: 800px;
+    margin: 30px;
   }
 }
 
@@ -197,7 +193,7 @@ export default class TeacherStatsView extends Vue {
 }
 
 .project-name p {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   letter-spacing: 2px;
   transform: translateY(0px);
