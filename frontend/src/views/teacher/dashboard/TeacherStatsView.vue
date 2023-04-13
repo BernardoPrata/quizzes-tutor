@@ -2,51 +2,36 @@
   <div class="container">
     <h2>Statistics for this course execution</h2>
     <div v-if="teacherDashboard != null" class="stats-container" >
-      <!-- Div to display the number of quizzes -->
+      <!-- Div to display the number of students -->
       <div class="items">
-        <div ref="totalQuizzes" class="icon-wrapper" data-cy="totalQuizzes">
-          <animated-number :number="teacherDashboard.numberOfQuizzes[0]" />
+        <div ref="totalStudents" class="icon-wrapper" data-cy="totalStudents">
+          <animated-number :number="teacherDashboard.numberOfStudents[0]" />
         </div>
         <div class="project-name">
-          <p>Number of Quizzes</p>
+          <p>Number of Students</p>
         </div>
       </div>
 
-      <!-- Div to display the number of quizzes solved (unique) -->
+      <!-- Div to display the number of students with more than 75% correct answers -->
       <div class="items">
-        <div ref="uniqueQuizzesSolved" class="icon-wrapper" data-cy="uniqueQuizzesSolved">
-          <animated-number :number="teacherDashboard.uniqueQuizzesSolved[0]" />
-        </div>
-        <div class="project-name">
-          <p>Number of Quizzes Solved (Unique)</p>
-        </div>
-      </div>
-
-      <!-- Div to display the number of average quizzes solved -->
-      <div class="items">
-        <div ref="averageSolvedQuizes" class="icon-wrapper" data-cy="averageSolvedQuizes">
-          <animated-number :number="teacherDashboard.averageSolvedQuizes[0]" />
-        </div>
-        <div class="project-name">
-          <p>Number of Quizzes Solved (Unique, Average per student)</p>
-        </div>
-      </div>
-      <div class="items">
-        <div ref="studentsWithMoreThan75PerCentCorrectAnswers" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numStudentsOver75perc" />
+        <div ref="studentsWithMoreThan75PerCentCorrectAnswers" class="icon-wrapper" data-cy="studentsWithMoreThan75PerCentCorrectAnswers">
+          <animated-number :number="teacherDashboard.numStudentsOver75perc[0]" />
         </div>
         <div class="project-name">
           <p>Number of Students who Solved >= 75% Questions</p>
         </div>
       </div>
+
+      <!-- Div to display the number of students with more than 3 answered quizzes -->
       <div class="items">
-        <div ref="studentsWithMoreThanThreeAnsweredQuizzes" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numStudentsOver3quizes" />
+        <div ref="studentsWithMoreThanThreeAnsweredQuizzes" class="icon-wrapper" data-cy="studentsWithMoreThanThreeAnsweredQuizzes">
+          <animated-number :number="teacherDashboard.numStudentsOver3quizes[0]" />
         </div>
         <div class="project-name">
           <p>Number of Students who Solved >= 3 Quizzes</p>
         </div>
       </div>
+
       <!-- Div to display the number of quizzes -->
       <div class="items">
         <div ref="totalQuizzes" class="icon-wrapper" data-cy="totalQuizzes">
@@ -76,7 +61,7 @@
           <p>Number of Quizzes Solved (Unique, Average per student)</p>
         </div>
       </div>
-    </div>
+
     <h2>Comparison with previous course executions</h2>
 
     <div v-if="teacherDashboard != null" class="stats-container">
@@ -87,7 +72,7 @@
       </div>
     </div>
   </div>
-</template>  //npm i -D @types/chart.js
+</template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -132,6 +117,7 @@ export default class TeacherStatsView extends Vue {
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
       this.quizzesData = this.extractQuizzesData(this.teacherDashboard);
+      this.studentsData = this.extractStudentsData(this.teacherDashboard);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -189,7 +175,7 @@ export default class TeacherStatsView extends Vue {
     studentsData.labels = [
       tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
       tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
-      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+      tDb?.executionYears[0] ? tDb?.executionYears[0] + ' (current)' : 'current',
     ];
     studentsData.datasets = [
       {

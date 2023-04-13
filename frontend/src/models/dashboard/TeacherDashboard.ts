@@ -25,10 +25,5 @@ export default class TeacherDashboard {
       this.averageSolvedQuizes = jsonObj.averageSolvedQuizes;
       this.executionYears = jsonObj.executionYears;
     }
-
-    this.executionYears = [2021]
-    this.numberOfStudents = [15]
-    this.numStudentsOver3quizes = [5]
-    this.numStudentsOver75perc = [13]
   }
 }
