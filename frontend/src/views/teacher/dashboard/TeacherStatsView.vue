@@ -3,12 +3,35 @@
     <h2>Statistics for this course execution</h2>
     <div v-if="teacherDashboard != null" class="stats-container">
       <div class="items">
-        <div ref="totalStudents" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numberOfStudents" />
+        <div ref="totalQuestions" class="icon-wrapper" data-cy="totalQuestions">
+          <animated-number :number="teacherDashboard.numberOfQuestions[0]" />
         </div>
         <div class="project-name">
-          <p>Number of Students</p>
+          <p>Number of Questions</p>
         </div>
+
+        <div ref="uniqueQuestionsSolved" class="icon-wrapper" data-cy="uniqueQuestionsSolved">
+          <animated-number :number="teacherDashboard.uniqueQuestionsSolved[0]" />
+        </div>
+        <div class="project-name">
+          <p>Number of Questions Solved (Unique)</p>
+        </div>
+
+        <div ref="averageSolvedCorrectQuestions" class="icon-wrapper" data-cy="averageSolvedCorrectQuestions">
+          <animated-number :number="teacherDashboard.averageSolvedCorrectQuestions[0]" />
+        </div>
+        <div class="project-name">
+          <p>Number of Questions Correctly Solved (Unique, Average Per Student)</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Comparison with previous course executions</h2>
+
+    <div v-if="teacherDashboard != null" class="stats container">
+      <!-- Div to display the stats about questions -->
+      <div class="bar-chart">
+        <bar-chart :data="questionsData" />
       </div>
     </div>
 </div>
@@ -19,23 +42,92 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import AnimatedNumber from '@/components/AnimatedNumber.vue';
 import TeacherDashboard from '@/models/dashboard/TeacherDashboard';
+import {
+  Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+} from 'chart.js';
+import { Bar } from 'vue-chartjs';
+
+
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+);
+
 
 @Component({
-  components: { AnimatedNumber },
+  components: { AnimatedNumber, Bar },
 })
 
 export default class TeacherStatsView extends Vue {
   @Prop() readonly dashboardId!: number;
   teacherDashboard: TeacherDashboard | null = null;
+  questionsData: Object = {};
+  options: Object = {};
 
   async created() {
     await this.$store.dispatch('loading');
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
+      this.questionsData = this.extractQuestionsData(this.teacherDashboard);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
     await this.$store.dispatch('clearLoading');
+  }
+
+
+  extractQuestionsData(tDb: TeacherDashboard) {
+    let questionsData: { labels: object, datasets: object } = {
+      labels: [],
+      datasets: [],
+    };
+
+    questionsData.labels = [
+      tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
+      tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
+      tDb?.executionYears[0] ? tDb?.executionYears[0] + ' (current)' : 'current',
+    ];
+
+    questionsData.datasets = [
+      {
+        label: 'Questions: Total Available',
+        backgroundColor: '',
+        data: [
+          tDb?.numberOfQuestions[2],
+          tDb?.numberOfQuestions[1],
+          tDb?.numberOfQuestions[0],
+        ],
+      },
+      {
+        label: 'Questions: Solved (Unique)',
+        backgroundColor: '',
+        data: [
+          tDb?.uniqueQuestionsSolved[2],
+          tDb?.uniqueQuestionsSolved[1],
+          tDb?.uniqueQuestionsSolved[0],
+        ],
+      },
+      {
+        label: 'Questions: Correctly Solved (Unique, Average Per Student)',
+        backgroundColor: '',
+        data: [
+          tDb?.averageSolvedCorrectQuestions[2],
+          tDb?.averageSolvedCorrectQuestions[1],
+          tDb?.averageSolvedCorrectQuestions[0],
+        ],
+      },
+    ];
+    return questionsData;
   }
 }
 
