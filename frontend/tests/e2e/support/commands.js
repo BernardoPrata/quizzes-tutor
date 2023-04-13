@@ -624,3 +624,31 @@ Cypress.Commands.add('checkStats', (statsName, statsValue) => {
         expect(numberOfQuizzes).to.equal(statsValue);
     });
 });
+
+Cypress.Commands.add('compareImages', (expectedPhotoName, testPhotoName) => {
+    const PNG = require('pngjs').PNG;
+    // pixelmatch library will handle comparison
+    const pixelmatch = require('pixelmatch');
+    cy.readFile(`tests/e2e/expected/${expectedPhotoName}`, 'base64').then(baseImage => {
+        cy.readFile(`tests/e2e/screenshots/${testPhotoName}`, 'base64').then(testImage => {
+            // load both pictures
+            const img1 = PNG.sync.read(Buffer.from(baseImage, 'base64'));
+            const img2 = PNG.sync.read(Buffer.from(testImage, 'base64'));
+
+            const { width, height } = img1;
+            const diff = new PNG({ width, height });
+
+            // calling pixelmatch return how many pixels are different
+            const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
+
+            // calculating a percent diff
+            const diffPercent = (numDiffPixels / (width * height) * 100);
+
+            //cy.task('log', `Found a ${diffPercent.toFixed(2)}% pixel difference`);
+            //cy.log(`Found a ${diffPercent.toFixed(2)}% pixel difference`);
+            //cy.writeFile('diff.png', PNG.sync.write(diff));
+
+            expect(diffPercent).to.be.below(8);
+        });
+    });
+});

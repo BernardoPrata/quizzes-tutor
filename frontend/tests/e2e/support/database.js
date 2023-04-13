@@ -247,9 +247,53 @@ Cypress.Commands.add('cleanTestCoursesByAcademicTerm', () => {
     delete from quiz_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
     delete from question_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
     delete from student_stats where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
+    delete from student_dashboard where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
     delete from teacher_dashboard where course_execution_id in (select id from course_executions where academic_term like 'TEST-%');
     delete from users_course_executions where course_executions_id in (select id from course_executions where academic_term like 'TEST-%');
     delete from course_executions where academic_term like 'TEST-%';
     `);
 });
 
+Cypress.Commands.add('deleteTestUsers', () => {
+  dbCommand(`
+DELETE FROM users_course_executions WHERE users_id IN (SELECT id FROM users WHERE name LIKE 'TEST-%' OR name LIKE 'Demo%');
+DELETE FROM auth_users WHERE username LIKE 'TEST-%' OR username LIKE 'demo%';
+DELETE FROM users WHERE name LIKE 'TEST-%' OR name LIKE 'Demo%';  `);
+});
+Cypress.Commands.add(
+    'changeDemoStudentCourseExecutionMatchingAcademicTerm',
+    (academicTerm) => {
+      cy.task('queryDatabase', {
+        query: `INSERT INTO users_course_executions (users_id, course_executions_id)
+                SELECT
+                    (SELECT id FROM users WHERE name = 'Demo Student'),
+                    (SELECT id FROM course_executions WHERE academic_term = '${academicTerm}' )
+                  `,
+        credentials: credentials,
+      });
+    }
+);
+
+Cypress.Commands.add('createStudentAddToCourseExecution', (name ,academicTerm) => {
+  dbCommand(`
+    INSERT INTO users (user_type,name,admin,role)
+    VALUES ('student','${name}', 'f','STUDENT');
+    INSERT INTO users_course_executions (users_id, course_executions_id)
+    VALUES ((select id from users where name = '${name}'), (select id from course_executions where academic_term = '${academicTerm}'));
+  `);
+});
+
+Cypress.Commands.add('addQuizz', (key ,title,academicTerm,date) => {
+  dbCommand(`
+    INSERT INTO quizzes (key, title,type, course_execution_id, available_date)
+    VALUES ('${key}','${title}','PROPOSED', (select id from course_executions where academic_term = '${academicTerm}'),'${date}') ;
+  `);
+});
+
+
+Cypress.Commands.add('addQuestionToQuizz', (question ,quiz,sequence) => {
+  dbCommand(`
+    INSERT INTO quiz_questions (question_id,quiz_id,sequence)
+    VALUES ((select id from questions where title = '${question}'), (select id from quizzes where title = '${quiz}'),'${sequence}') ;
+  `);
+});
