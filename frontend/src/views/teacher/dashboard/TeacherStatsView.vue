@@ -4,7 +4,7 @@
     <div v-if="teacherDashboard != null" class="stats-container">
       <div class="items">
         <div ref="totalStudents" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numberOfStudents" />
+          <animated-number :number="teacherDashboard.numberOfStudents[0]" />
         </div>
         <div class="project-name">
           <p>Number of Students</p>
@@ -12,7 +12,7 @@
       </div>
       <div class="items">
         <div ref="studentsWithMoreThan75PerCentCorrectAnswers" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numStudentsOver75perc" />
+          <animated-number :number="teacherDashboard.numStudentsOver75perc[0]" />
         </div>
         <div class="project-name">
           <p>Number of Students who Solved >= 75% Questions</p>
@@ -20,7 +20,7 @@
       </div>
       <div class="items">
         <div ref="studentsWithMoreThanThreeAnsweredQuizzes" class="icon-wrapper">
-          <animated-number :number="teacherDashboard.numStudentsOver3quizes" />
+          <animated-number :number="teacherDashboard.numStudentsOver3quizes[0]" />
         </div>
         <div class="project-name">
           <p>Number of Students who Solved >= 3 Quizzes</p>
@@ -37,7 +37,7 @@
       </div>
     </div>
   </div>
-</template>  //npm i -D @types/chart.js
+</template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -82,6 +82,7 @@ export default class TeacherStatsView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.teacherDashboard = await RemoteServices.getTeacherDashboard();
+      this.studentsData = this.extractStudentsData(this.teacherDashboard);
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -97,7 +98,7 @@ export default class TeacherStatsView extends Vue {
     studentsData.labels = [
       tDb?.executionYears[2] ? tDb?.executionYears[2] : ' ',
       tDb?.executionYears[1] ? tDb?.executionYears[1] : ' ',
-      tDb?.executionYears[0] ? tDb.executionYears[0] + ' (current)' : 'current',
+      tDb?.executionYears[0] ? tDb?.executionYears[0] + ' (current)' : 'current',
     ];
     studentsData.datasets = [
       {
