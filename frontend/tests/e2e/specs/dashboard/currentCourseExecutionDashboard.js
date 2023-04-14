@@ -96,16 +96,20 @@ describe('Statistics testing', () => {
     cy.checkStats('uniqueQuestionsSolved',6);
     cy.checkStats('averageSolvedCorrectQuestions',2);
 
-    cy.get('.bar-chart canvas').eq(0).scrollIntoView().wait(5000).screenshot("./QuizStatsGraph")
-    cy.compareImages('QuizStatsGraphExpected.png', 'QuizStatsGraph.png');
+    cy.get('.bar-chart canvas').eq(0).scrollIntoView().wait(5000).screenshot("QuizStatsGraph")
+        .then(() => {
+          cy.compareImages('QuizStatsGraphExpected.png', 'QuizStatsGraph.png');
+        })
+    cy.get('.bar-chart canvas').eq(1).scrollIntoView().wait(5000).screenshot("StudentStatsGraph").then(() => {
+        cy.compareImages('StudentStatsGraphExpected.png', 'StudentStatsGraph.png');
+    })
 
-    cy.get('.bar-chart canvas').eq(1).scrollIntoView().wait(5000).screenshot("./StudentStatsGraph")
-    cy.compareImages('StudentStatsGraphExpected.png', 'StudentStatsGraph.png');
+    cy.get('.bar-chart canvas').eq(2).scrollIntoView().wait(5000).screenshot("QuestionStatsGraph")
+        .then(() => {
+            cy.compareImages('QuestionStatsGraphExpected.png', 'QuestionStatsGraph.png');
 
-    cy.get('.bar-chart canvas').eq(2).scrollIntoView().wait(5000).screenshot("./QuestionStatsGraph")
-    cy.compareImages('QuestionStatsGraphExpected.png', 'QuestionStatsGraph.png');
+        })
 
-    cy.wait(5000);
     cy.logout();
 
   });

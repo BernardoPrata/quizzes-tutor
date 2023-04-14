@@ -466,44 +466,6 @@ Cypress.Commands.add(
     cy.get('[data-cy="saveQuizButton"]').click();
   }
 );
-Cypress.Commands.add(
-    'createOtherQuizzWith2Questions',
-    (quizTitle, questionTitle, questionTitle2) => {
-        cy.get('[data-cy="newQuizButton"]').click();
-        cy.get('[data-cy="openQueryButton"]').click();
-        cy.get('[data-cy="submitQueryButton"]').click();
-        cy.get('[data-cy="quizTitleTextArea"]').type(quizTitle);
-
-        cy.get('#availableDateInput-input').click();
-        cy.get(
-            '.datetimepicker > .datepicker > .datepicker-buttons-container > .datepicker-button > .datepicker-button-content'
-        )
-            .first()
-            .click();
-        cy.get('[data-cy="searchField"]').clear().type(questionTitle);
-        cy.contains(questionTitle)
-            .parent()
-            .should('have.length', 1)
-            .parent()
-            .children()
-            .should('have.length', 3)
-            .find('[data-cy="addToQuizButton"]')
-            .click();
-
-        cy.get('[data-cy="searchField"]').clear();
-        cy.get('[data-cy="searchField"]').type(questionTitle2);
-        cy.contains(questionTitle2)
-            .parent()
-            .should('have.length', 1)
-            .parent()
-            .children()
-            .should('have.length', 3)
-            .find('[data-cy="addToQuizButton"]')
-            .click();
-
-        cy.get('[data-cy="saveQuizButton"]').click();
-    }
-);
 
 Cypress.Commands.add(
   'solveQuizz',
@@ -532,9 +494,6 @@ Cypress.Commands.add(
     cy.get('[data-cy="confirmationButton"]').click();
   }
 );
-
-
-
 
 Cypress.Commands.add('createDiscussion', (discussionContent) => {
   cy.get('[data-cy="quizzesStudentMenuButton"]').click();
@@ -598,12 +557,6 @@ Cypress.Commands.add('deleteQuestion', (questionTitle) => {
     .find('[data-cy="deleteQuestionButton"]')
     .click();
 });
-
-Cypress.Commands.add('changeCourse',(courseName) => {
-    cy.get('[data-cy="multipleCoursesMenuButton"]').click();
-    cy.contains(courseName).click();
-});
-
 Cypress.Commands.add('selectCourseByTerm', (term) => {
     cy.get('[data-cy="multipleCoursesMenuButton"]').click();
     cy.get('.container')
@@ -612,7 +565,6 @@ Cypress.Commands.add('selectCourseByTerm', (term) => {
         .find('.v-list-item')
         .click()
 })
-
 
 // create command with two arguments
 Cypress.Commands.add('checkStats', (statsName, statsValue) => {
@@ -631,22 +583,16 @@ Cypress.Commands.add('compareImages', (expectedPhotoName, testPhotoName) => {
     const pixelmatch = require('pixelmatch');
     cy.readFile(`tests/e2e/expected/${expectedPhotoName}`, 'base64').then(baseImage => {
         cy.readFile(`tests/e2e/screenshots/${testPhotoName}`, 'base64').then(testImage => {
-            // load both pictures
             const img1 = PNG.sync.read(Buffer.from(baseImage, 'base64'));
             const img2 = PNG.sync.read(Buffer.from(testImage, 'base64'));
 
             const { width, height } = img1;
             const diff = new PNG({ width, height });
 
-            // calling pixelmatch return how many pixels are different
             const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
 
-            // calculating a percent diff
             const diffPercent = (numDiffPixels / (width * height) * 100);
 
-            //cy.task('log', `Found a ${diffPercent.toFixed(2)}% pixel difference`);
-            //cy.log(`Found a ${diffPercent.toFixed(2)}% pixel difference`);
-            //cy.writeFile('diff.png', PNG.sync.write(diff));
 
             expect(diffPercent).to.be.below(8);
         });
