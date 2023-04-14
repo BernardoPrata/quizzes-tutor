@@ -73,7 +73,7 @@ describe('Statistics testing', () => {
         cy.selectCourseByTerm('TESTS2022- Year 2021/2022');
         cy.get('[data-cy="dashboardMenuButton"]').click();
         cy.wait(2000);
-        cy.checkStats('totalStudents', 3);
+        cy.checkStats('totalStudents', 4);
         cy.checkStats('studentsWithMoreThan75PerCentCorrectAnswers', 0);
         cy.checkStats('studentsWithMoreThanThreeAnsweredQuizzes', 0);
 
