@@ -582,7 +582,7 @@ Cypress.Commands.add('compareImages', (expectedPhotoName, testPhotoName) => {
     // pixelmatch library will handle comparison
     const pixelmatch = require('pixelmatch');
     cy.readFile(`tests/e2e/expected/${expectedPhotoName}`, 'base64').then(baseImage => {
-        cy.readFile(`tests/e2e/screenshots/${testPhotoName}`, 'base64').then(testImage => {
+        cy.readFile(`tests/e2e/screenshots/currentCourseExecutionDashboard.js/${testPhotoName}`, 'base64').then(testImage => {
             const img1 = PNG.sync.read(Buffer.from(baseImage, 'base64'));
             const img2 = PNG.sync.read(Buffer.from(testImage, 'base64'));
 
