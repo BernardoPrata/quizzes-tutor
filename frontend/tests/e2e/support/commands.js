@@ -624,3 +624,45 @@ Cypress.Commands.add('checkStats', (statsName, statsValue) => {
         expect(numberOfQuizzes).to.equal(statsValue);
     });
 });
+
+Cypress.Commands.add('selectCourseByTerm', (term) => {
+    cy.get('[data-cy="multipleCoursesMenuButton"]').click();
+    cy.get('.container')
+        .contains('.title', term)
+        .parent()
+        .find('.v-list-item')
+        .click()
+})
+
+// create command with two arguments
+Cypress.Commands.add('checkStats', (statsName, statsValue) => {
+    cy.get(`[data-cy="${statsName}"]`).should(($element) => {
+        // Extract the value from the element
+        const numberOfQuizzes = Number($element.text());
+
+        // Assert that the value is equal to 3
+        expect(numberOfQuizzes).to.equal(statsValue);
+    });
+});
+
+Cypress.Commands.add('compareImages', (expectedPhotoName, testPhotoName) => {
+    const PNG = require('pngjs').PNG;
+    // pixelmatch library will handle comparison
+    const pixelmatch = require('pixelmatch');
+    cy.readFile(`tests/e2e/expected/${expectedPhotoName}`, 'base64').then(baseImage => {
+        cy.readFile(`tests/e2e/screenshots/currentCourseExecutionDashboard.js/${testPhotoName}`, 'base64').then(testImage => {
+            const img1 = PNG.sync.read(Buffer.from(baseImage, 'base64'));
+            const img2 = PNG.sync.read(Buffer.from(testImage, 'base64'));
+
+            const { width, height } = img1;
+            const diff = new PNG({ width, height });
+
+            const numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, { threshold: 0.1 });
+
+            const diffPercent = (numDiffPixels / (width * height) * 100);
+
+
+            expect(diffPercent).to.be.below(8);
+        });
+    });
+});
